@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <None Remove="Images\ksi_logo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RestaurantOrders.Database\RestaurantOrders.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\ksi_logo.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
