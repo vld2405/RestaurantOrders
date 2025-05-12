@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\KETO.png" />
     <None Remove="Images\ksi_logo.jpg" />
   </ItemGroup>
 
@@ -21,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\KETO.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\ksi_logo.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

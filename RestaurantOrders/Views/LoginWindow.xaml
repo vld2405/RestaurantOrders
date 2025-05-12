@@ -6,8 +6,8 @@
         xmlns:views="clr-namespace:RestaurantOrders.Views"
         mc:Ignorable="d"
         Title="Login" Height="450" Width="400"
-        WindowStartupLocation="CenterScreen"
-        Icon="/Images/ksi_logo.jpg">
+        Icon="/Images/KETO.png"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Border Background="#F0F0F0" 
                 CornerRadius="8" 
@@ -40,22 +40,41 @@
                              Padding="5"
                              BorderBrush="#CCCCCC"
                              BorderThickness="1"/>
-
-                <CheckBox x:Name="RememberMeCheckBox" 
-                          Content="Remember me" 
-                          Margin="0,15,0,15"/>
-
+                
                 <Button x:Name="LoginButton" 
                         Content="Login" 
-                        Height="35" 
-                        Background="#4CAF50" 
+                        Height="35"  
                         Foreground="White"
-                        BorderThickness="0">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="10"/>
+                        BorderThickness="0"
+                        Margin="0 30 0 0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#4CAF50"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="10"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                              VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2E7D32"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#1B5E20"/>
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
-                    </Button.Resources>
+                    </Button.Style>
                 </Button>
             </StackPanel>
         </Border>
