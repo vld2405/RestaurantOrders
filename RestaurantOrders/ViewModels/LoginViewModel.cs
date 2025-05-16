@@ -1,17 +1,22 @@
-﻿using RestaurantOrders.Models;
-using System;
-using System.Collections.Generic;
+﻿using RestaurantOrders.Database.Enums;
+using RestaurantOrders.Database.Enums;
+using RestaurantOrders.Models;
+using RestaurantOrders.Views;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RestaurantOrders.ViewModels
 {
-    public class LoginViewModel
+    public class LoginViewModel : INotifyPropertyChanged
     {
         //TODO 1: Logica pentru creat useri si tot. + sa vad cum fac cu baza de date
+        public LoginViewModel()
+        {
+            CommandLoginButton = new RelayCommand(LoginButtonClicked);
+            CommandNoAccountEnteringButton = new RelayCommand(NoAccountEnteringClicked);
+        }
 
         private string _email = string.Empty;
         private string _password = string.Empty;
@@ -41,6 +46,31 @@ namespace RestaurantOrders.ViewModels
                 }
             }
         }
+
+        #region Commands
+
+        public ICommand CommandLoginButton { get; set; }
+        public ICommand CommandNoAccountEnteringButton { get; set; }
+
+        #endregion
+
+        #region CommandMethods
+
+        public void LoginButtonClicked()
+        {
+
+        }
+        
+        public void NoAccountEnteringClicked()
+        {
+            MenuWindow menuWindow = new MenuWindow();
+            menuWindow.Show();
+            Window loginWindow = Application.Current.MainWindow;
+            loginWindow.Close();
+            Application.Current.MainWindow = menuWindow;
+        }
+
+        #endregion
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

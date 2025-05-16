@@ -18,7 +18,7 @@
         <Border Background="#F0F0F0" 
                 CornerRadius="8" 
                 Width="350" 
-                Height="300"
+                Height="350"
                 HorizontalAlignment="Center" 
                 VerticalAlignment="Center"
                 BorderBrush="#CCCCCC"
@@ -47,13 +47,13 @@
                              Padding="5"
                              BorderBrush="#CCCCCC"
                              BorderThickness="1"/>
-                
+
                 <Button x:Name="LoginButton" 
                         Content="Login" 
                         Height="35"  
                         Foreground="White"
                         BorderThickness="0"
-                        Margin="0 30 0 0">
+                        Margin="0,30,0,10">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="#4CAF50"/>
@@ -78,6 +78,42 @@
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Background" Value="#1B5E20"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="EnterWithoutAccountButton" 
+                        Content="Enter Without Account" 
+                        Height="35"  
+                        Foreground="White"
+                        BorderThickness="0"
+                        Command="{Binding CommandNoAccountEnteringButton}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#2196F3"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="10"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                              VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#1976D2"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#0D47A1"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
