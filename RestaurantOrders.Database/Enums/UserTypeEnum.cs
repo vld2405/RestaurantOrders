@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantOrders.Models
+namespace RestaurantOrders.Database.Enums
 {
     public enum UserType
     {
