@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantOrders.Database.Data
+namespace RestaurantOrders.Database.Context
 {
     public class RestaurantDbContext : DbContext
     {
