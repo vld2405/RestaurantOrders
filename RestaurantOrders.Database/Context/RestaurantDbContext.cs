@@ -14,6 +14,7 @@ namespace RestaurantOrders.Database.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails{ get; set; }
+        public DbSet<Allergen> Allergens{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
