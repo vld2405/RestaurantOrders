@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantOrders.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,21 @@ namespace RestaurantOrders.Views
         public CreateAccountWindow()
         {
             InitializeComponent();
+        }
+
+        private void CreateAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (CreateAccountViewModel)DataContext;
+
+            // Get password from PasswordBox (can't bind directly for security reasons)
+            viewModel.Password = PasswordBox.Password;
+
+            // Verify passwords match
+            if (PasswordBox.Password != ConfirmPasswordBox.Password)
+            {
+                MessageBox.Show("Passwords do not match.", "Password Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
     }
 }

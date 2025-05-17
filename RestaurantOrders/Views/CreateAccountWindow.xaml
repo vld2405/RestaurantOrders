@@ -114,6 +114,7 @@
                             Height="40"  
                             Foreground="White"
                             BorderThickness="0"
+                            Click="CreateAccountButton_Click"
                             Command="{Binding CommandCreateAccount}"
                             Margin="0,30,0,10">
                         <Button.Style>

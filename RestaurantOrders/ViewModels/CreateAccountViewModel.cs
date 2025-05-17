@@ -1,11 +1,14 @@
-﻿using RestaurantOrders.Database.Context;
+﻿using Microsoft.Data.SqlClient;
+using RestaurantOrders.Database.Context;
 using RestaurantOrders.Database.Entities;
 using RestaurantOrders.Database.Enums;
+using RestaurantOrders.Infrastructure.Config;
 using RestaurantOrders.Models;
 using RestaurantOrders.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -128,14 +131,71 @@ namespace RestaurantOrders.ViewModels
         
         public void CreateAccountClicked()
         {
+            try
+            {
+                // Get password from PasswordBox (you'll need to add this code to your CreateAccountWindow.xaml.cs)
+                // For this, update your button to use Click event in XAML:
+                // <Button x:Name="CreateAccountButton" Click="CreateAccountButton_Click" ... />
 
-            // logica pentru adaugarea userului in DB
+                // Validate input
+                if (string.IsNullOrWhiteSpace(FirstName) ||
+                    string.IsNullOrWhiteSpace(LastName) ||
+                    string.IsNullOrWhiteSpace(Email) ||
+                    string.IsNullOrWhiteSpace(Password))
+                {
+                    MessageBox.Show("Please fill in all required fields.", "Missing Information", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.Show();
-            Window currentWindow = Application.Current.MainWindow;
-            currentWindow.Close();
-            Application.Current.MainWindow = loginWindow;
+                using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
+                {
+                    connection.Open();
+
+                    using (var command = new SqlCommand("AddUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@FirstName", FirstName);
+                        command.Parameters.AddWithValue("@LastName", LastName);
+                        command.Parameters.AddWithValue("@Email", Email);
+                        command.Parameters.AddWithValue("@PhoneNo", PhoneNo ?? string.Empty);
+                        command.Parameters.AddWithValue("@Address", Address ?? string.Empty);
+                        command.Parameters.AddWithValue("@Password", Password); // Consider hashing
+                        command.Parameters.AddWithValue("@UserType", (int)UserType.Client); // Default to Client
+
+                        // Execute the procedure and get the result
+                        var result = command.ExecuteScalar();
+
+                        if (result != null && result != DBNull.Value)
+                        {
+                            int userId = Convert.ToInt32(result);
+                            Console.WriteLine("userId = " + userId);
+                            if (userId == -1)
+                            {
+                                MessageBox.Show("A user with this email already exists.", "Registration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+
+                            //MessageBox.Show("Account created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            LoginWindow loginWindow = new LoginWindow();
+                            loginWindow.Show();
+                            Window currentWindow = Application.Current.MainWindow;
+                            currentWindow.Close();
+                            Application.Current.MainWindow = loginWindow;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to create account. Please try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
