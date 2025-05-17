@@ -105,6 +105,43 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- Search Box Style -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="30,8,10,8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="18"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid>
+                                <TextBlock Text="&#x1F50D;" 
+                                           FontSize="16" 
+                                           Margin="10,0,0,0" 
+                                           VerticalAlignment="Center"
+                                           Foreground="#999999"/>
+                                <ScrollViewer x:Name="PART_ContentHost" 
+                                              Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="Center"/>
+                                <TextBlock Text="Search menu items..." 
+                                           Margin="{TemplateBinding Padding}" 
+                                           Foreground="LightGray" 
+                                           VerticalAlignment="Center"/>
+                                           <!--Visibility="{Binding Text.IsEmpty, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" -->
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -119,8 +156,15 @@
                 <TextBlock Text="Restaurant Menu" 
                            FontSize="28" 
                            FontWeight="Bold" 
-                           Margin="0,0,0,20"
+                           Margin="0,0,0,15"
                            HorizontalAlignment="Center"/>
+
+                <!-- Search Bar -->
+                <Grid Margin="0,0,0,20">
+                    <TextBox x:Name="SearchBox" 
+                             Style="{StaticResource SearchBoxStyle}"/>
+                             <!-- TextChanged="SearchBox_TextChanged" -->
+                </Grid>
 
                 <!-- Appetizers -->
                 <TextBlock Text="Appetizers" Style="{StaticResource MenuCategoryStyle}"/>
