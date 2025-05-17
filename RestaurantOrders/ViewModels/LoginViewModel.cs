@@ -1,4 +1,5 @@
-﻿using RestaurantOrders.Database.Enums;
+﻿using Azure.Identity;
+using RestaurantOrders.Database.Enums;
 using RestaurantOrders.Database.Enums;
 using RestaurantOrders.Models;
 using RestaurantOrders.Views;
@@ -15,6 +16,7 @@ namespace RestaurantOrders.ViewModels
         public LoginViewModel()
         {
             CommandLoginButton = new RelayCommand(LoginButtonClicked);
+            CommandCreateAccountButton = new RelayCommand(CreateAccountClicked);
             CommandNoAccountEnteringButton = new RelayCommand(NoAccountEnteringClicked);
         }
 
@@ -47,36 +49,49 @@ namespace RestaurantOrders.ViewModels
             }
         }
 
-        #region Commands
-
-        public ICommand CommandLoginButton { get; set; }
-        public ICommand CommandNoAccountEnteringButton { get; set; }
-
-        #endregion
-
         #region CommandMethods
 
         public void LoginButtonClicked()
         {
-
+            // TODO : Logica pentru logare
+        }
+        
+        public void CreateAccountClicked()
+        {
+            CreateAccountWindow accountWindow = new CreateAccountWindow();
+            accountWindow.Show();
+            Window currentWindow = Application.Current.MainWindow;
+            currentWindow.Close();
+            Application.Current.MainWindow = accountWindow;
         }
         
         public void NoAccountEnteringClicked()
         {
             MenuWindow menuWindow = new MenuWindow();
             menuWindow.Show();
-            Window loginWindow = Application.Current.MainWindow;
-            loginWindow.Close();
+            Window currentWindow = Application.Current.MainWindow;
+            currentWindow.Close();
             Application.Current.MainWindow = menuWindow;
         }
 
         #endregion
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        #region Command Declaration
 
+        public ICommand CommandLoginButton { get; set; }
+        public ICommand CommandCreateAccountButton { get; set; }
+        public ICommand CommandNoAccountEnteringButton { get; set; }
+
+        #endregion
+
+        #region Property Changed
+
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }
