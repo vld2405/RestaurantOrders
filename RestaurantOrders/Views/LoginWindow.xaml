@@ -53,6 +53,7 @@
                         Height="35"  
                         Foreground="White"
                         BorderThickness="0"
+                        Click="LoginButton_Click"
                         Command="{Binding CommandLoginButton}"
                         Margin="0,30,0,10">
                     <Button.Style>

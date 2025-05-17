@@ -1,11 +1,5 @@
-﻿using Azure.Identity;
-using RestaurantOrders.Database.Enums;
-using System;
-using System.Collections.Generic;
+﻿using RestaurantOrders.Database.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantOrders.Database.Entities
 {
@@ -18,7 +12,6 @@ namespace RestaurantOrders.Database.Entities
 
         [Column(TypeName = "decimal(6, 2)")]
         public decimal Price { get; set; }
-
         public List<Allergen>? Allergens { get; set; }
 
         // TODO 3: MENIURILE TREBUIE SA AIBA SI ELE O CATEGORIE (ex: un meniu este considerat o grupare de mai multe produse)

@@ -184,9 +184,10 @@
                                 <Button Content="-" Style="{StaticResource QuantityButtonStyle}"/>
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
-                                <Button Content="Add to Cart" 
+                                <Button Content="Add to Cart"
                                         Style="{StaticResource AddToCartButtonStyle}" 
-                                        Margin="15,0,0,0"/>
+                                        Margin="15,0,0,0"
+                                        IsEnabled="{Binding IsSubmitEnabled}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -208,7 +209,8 @@
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
                                         Style="{StaticResource AddToCartButtonStyle}" 
-                                        Margin="15,0,0,0"/>
+                                        Margin="15,0,0,0"
+                                        IsEnabled="{Binding IsSubmitEnabled}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -233,6 +235,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -255,6 +258,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -281,6 +285,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -303,6 +308,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -329,6 +335,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -351,6 +358,7 @@
                                 <TextBlock Text="0" Style="{StaticResource QuantityTextStyle}"/>
                                 <Button Content="+" Style="{StaticResource QuantityButtonStyle}"/>
                                 <Button Content="Add to Cart" 
+                                        IsEnabled="{Binding IsSubmitEnabled}"
                                         Style="{StaticResource AddToCartButtonStyle}" 
                                         Margin="15,0,0,0"/>
                             </StackPanel>
@@ -415,7 +423,8 @@
                     <Button Content="Place Order"
                             Height="50"
                             FontSize="16"
-                            Margin="0,15,0,0">
+                            Margin="0,15,0,0"
+                            IsEnabled="{Binding IsSubmitEnabled}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="#4CAF50"/>

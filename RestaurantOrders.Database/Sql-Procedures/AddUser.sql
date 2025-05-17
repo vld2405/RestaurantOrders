@@ -9,16 +9,13 @@ CREATE PROCEDURE [dbo].[AddUser]
 AS
 BEGIN
     SET NOCOUNT ON;
-    
-    -- Check if email already exists
+
     IF EXISTS (SELECT 1 FROM [dbo].[Users] WHERE Email = @Email)
     BEGIN
-        -- Return -1 to indicate email already exists
         SELECT -1 AS UserId;
         RETURN;
     END
     
-    -- Insert the new user
     INSERT INTO [dbo].[Users] (
         FirstName,
         LastName,
@@ -34,10 +31,9 @@ BEGIN
         @Email,
         @PhoneNo,
         @Address,
-        @Password, -- Note: In a production system, you should store a salted hash, not the raw password
+        @Password,
         @UserType
     );
     
-    -- Return the new user's ID
     SELECT SCOPE_IDENTITY() AS UserId;
 END

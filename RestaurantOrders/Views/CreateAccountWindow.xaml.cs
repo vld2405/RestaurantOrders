@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace RestaurantOrders.Views
 {
-    /// <summary>
-    /// Interaction logic for CreateAccountWindow.xaml
-    /// </summary>
     public partial class CreateAccountWindow : Window
     {
         public CreateAccountWindow()

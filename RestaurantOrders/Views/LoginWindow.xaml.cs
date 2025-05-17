@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using RestaurantOrders.ViewModels;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,14 +12,18 @@ using System.Windows.Shapes;
 
 namespace RestaurantOrders.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class LoginWindow : Window
     {
         public LoginWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (LoginViewModel)DataContext;
+
+            viewModel.Password = PasswordBox.Password;
         }
     }
 }
