@@ -1,4 +1,7 @@
-﻿using RestaurantOrders.Models;
+﻿using RestaurantOrders.Database.Context;
+using RestaurantOrders.Database.Entities;
+using RestaurantOrders.Database.Enums;
+using RestaurantOrders.Models;
 using RestaurantOrders.Views;
 using System;
 using System.Collections.Generic;
@@ -20,6 +23,99 @@ namespace RestaurantOrders.ViewModels
             CommandCreateAccount = new RelayCommand(CreateAccountClicked);
         }
 
+        private string _firstName;
+        private string _lastName;
+        private string _email;
+        private string _phoneNo;
+        private string _address;
+        private string _password;
+
+        #region getters-setters
+        public string FirstName
+        {
+            get { return _firstName; }
+
+            set
+            {
+                if (_firstName != value)
+                {
+                    _firstName = value;
+                    OnPropertyChanged(nameof(FirstName));
+                }
+            }
+        }
+        public string LastName
+        {
+            get { return _lastName; }
+
+            set
+            {
+                if(_lastName != value)
+                {
+                    _lastName = value;
+                    OnPropertyChanged(nameof(LastName));
+                }
+            }
+        }
+
+        public string Email
+        {
+            get { return _email; }
+
+            set
+            {
+                if (_email != value)
+                {
+                    _email = value;
+                    OnPropertyChanged(nameof(Email));
+                }
+            }
+        }
+
+        public string PhoneNo
+        {
+            get { return _phoneNo; }
+
+            set
+            {
+                if (_phoneNo != value)
+                {
+                    _phoneNo = value;
+                    OnPropertyChanged(nameof(PhoneNo));
+                }
+            }
+        }
+
+        public string Address
+        {
+            get { return _address; }
+
+            set
+            {
+                if (_address != value)
+                {
+                    _address = value;
+                    OnPropertyChanged(nameof(Address));
+                }
+            }
+        }
+
+        public string Password
+        {
+            get { return _password; }
+
+            set
+            {
+                if (_password != value)
+                {
+                    _password = value;
+                    OnPropertyChanged(nameof(Password));
+                }
+            }
+        }
+
+        #endregion
+
         #region Command Methods
         public void CancelClicked()
         {
@@ -32,7 +128,8 @@ namespace RestaurantOrders.ViewModels
         
         public void CreateAccountClicked()
         {
-            // TODO: Logica pentru adaugat useri in baza de date
+
+            // logica pentru adaugarea userului in DB
 
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();

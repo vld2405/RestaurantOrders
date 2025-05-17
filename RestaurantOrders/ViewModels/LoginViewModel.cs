@@ -23,6 +23,8 @@ namespace RestaurantOrders.ViewModels
         private string _email = string.Empty;
         private string _password = string.Empty;
 
+        #region getters-setters
+
         public string Email
         {
             get => _email;
@@ -48,6 +50,8 @@ namespace RestaurantOrders.ViewModels
                 }
             }
         }
+
+        #endregion
 
         #region CommandMethods
 

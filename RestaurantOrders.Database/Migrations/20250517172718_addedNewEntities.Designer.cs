@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantOrders.Database.Context;
 
@@ -10,9 +11,11 @@ using RestaurantOrders.Database.Context;
 namespace RestaurantOrders.Database.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250517172718_addedNewEntities")]
+    partial class addedNewEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("AllergenProduct", (string)null);
+                    b.ToTable("AllergenProduct");
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.Allergen", b =>
@@ -50,7 +53,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Allergens", (string)null);
+                    b.ToTable("Allergens");
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.Order", b =>
@@ -68,7 +71,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.OrderDetail", b =>
@@ -94,7 +97,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.Product", b =>
@@ -117,7 +120,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.User", b =>
@@ -151,7 +154,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("AllergenProduct", b =>

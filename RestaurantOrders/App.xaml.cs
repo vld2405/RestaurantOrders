@@ -18,7 +18,9 @@ namespace RestaurantOrders
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             Configuration = builder.Build();
+
             AppConfig.Init(Configuration);
+
             base.OnStartup(e);
         }
 
