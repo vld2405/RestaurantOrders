@@ -383,7 +383,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Tiramisu" Style="{StaticResource ItemNameStyle}" Grid.Row="0"/>
+                            <TextBlock Text="Tiramiju" Style="{StaticResource ItemNameStyle}" Grid.Row="0"/>
                             <TextBlock Text="35.00 RON" Style="{StaticResource ItemPriceStyle}" Grid.Row="1"/>
 
                             <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,10,0,0">

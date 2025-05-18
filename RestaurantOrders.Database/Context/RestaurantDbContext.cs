@@ -13,6 +13,7 @@ namespace RestaurantOrders.Database.Context
         public DbSet<Allergen> Allergens { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<MenuDetail> MenuDetails { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public RestaurantDbContext() { }
 
