@@ -21,10 +21,10 @@ namespace RestaurantOrders.ViewModels
         {
             CommandAddProduct = new RelayCommand(AddProduct);
             CommandAddAllergen = new RelayCommand(AddAllergen);
+            CommandAddCategory = new RelayCommand(AddCategory);
             CommandCreateMenu = new RelayCommand(CreateMenu);
             CommandDeleteProduct = new RelayCommand(DeleteProduct);
             CommandDeleteAllergen = new RelayCommand(DeleteAllergen);
-            CommandAddCategory = new RelayCommand(AddCategory);
             CommandDeleteCategory = new RelayCommand(DeleteCategory);
         }
         public MenuViewModel(UserType userType) : this() 
@@ -109,7 +109,9 @@ namespace RestaurantOrders.ViewModels
         }
         private void AddCategory()
         {
-
+            CreateCategoryWindow createCategoryWindow = new CreateCategoryWindow();
+            createCategoryWindow.Owner = Application.Current.MainWindow;
+            createCategoryWindow.ShowDialog();
         }
         private void DeleteCategory()
         {

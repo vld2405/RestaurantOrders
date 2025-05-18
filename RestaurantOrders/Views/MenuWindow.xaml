@@ -225,7 +225,7 @@
 
                     <!-- Admin Management Button with Dropdown -->
                     <Button x:Name="AdminMenuButton"
-                            Content="Management" 
+                            Content="&#x1F6E0;&#xFE0F; Management" 
                             Style="{StaticResource AdminDropdownStyle}"
                             Grid.Column="0"
                             HorizontalAlignment="Left"

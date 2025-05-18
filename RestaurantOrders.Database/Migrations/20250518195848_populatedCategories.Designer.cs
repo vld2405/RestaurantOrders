@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantOrders.Database.Context;
 
@@ -10,9 +11,11 @@ using RestaurantOrders.Database.Context;
 namespace RestaurantOrders.Database.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518195848_populatedCategories")]
+    partial class populatedCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,136 +223,11 @@ namespace RestaurantOrders.Database.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(6, 2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            Name = "Eggs Benedict",
-                            Price = 35.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 1,
-                            Name = "Avocado Toast",
-                            Price = 28.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 1,
-                            Name = "Pancakes with Maple Syrup",
-                            Price = 25.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 2,
-                            Name = "Bruschetta",
-                            Price = 22.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 2,
-                            Name = "Spinach Artichoke Dip",
-                            Price = 32.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 2,
-                            Name = "Garlic Bread",
-                            Price = 15.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CategoryId = 3,
-                            Name = "Tomato Basil Soup",
-                            Price = 18.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CategoryId = 3,
-                            Name = "Chicken Noodle Soup",
-                            Price = 22.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CategoryId = 3,
-                            Name = "French Onion Soup",
-                            Price = 25.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CategoryId = 4,
-                            Name = "Tiramisu",
-                            Price = 28.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CategoryId = 4,
-                            Name = "Chocolate Cake",
-                            Price = 22.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CategoryId = 4,
-                            Name = "Crème Brûlée",
-                            Price = 35.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CategoryId = 5,
-                            Name = "Sparkling Water",
-                            Price = 8.99m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CategoryId = 5,
-                            Name = "Iced Tea",
-                            Price = 12.50m,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CategoryId = 5,
-                            Name = "House Wine (Glass)",
-                            Price = 25.99m,
-                            Quantity = 100
-                        });
                 });
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.User", b =>
