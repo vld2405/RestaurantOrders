@@ -174,7 +174,7 @@ namespace RestaurantOrders.ViewModels
                                 return;
                             }
 
-                            //MessageBox.Show("Account created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show("Account created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                             LoginWindow loginWindow = new LoginWindow();
                             loginWindow.Show();
