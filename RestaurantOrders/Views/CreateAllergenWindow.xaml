@@ -1,0 +1,128 @@
+﻿<Window x:Class="RestaurantOrders.Views.CreateAllergenWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestaurantOrders.Views"
+        xmlns:vms="clr-namespace:RestaurantOrders.ViewModels"
+        mc:Ignorable="d"
+        Title="Add New Allergen" Height="280" Width="400"
+        Icon="/Images/KETO.png"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+
+        <Style x:Key="LabelTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Width" Value="65"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubmitButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#e69149"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#bf793d"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#996131"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#572f0e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#40230b"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#301b09"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vms:CreateAllergenViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Border Background="#F0F0F0" 
+                CornerRadius="8" 
+                Width="350" 
+                Height="230"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1"
+                Padding="25">
+            <StackPanel>
+                <TextBlock Text="Add New Allergen" 
+                           Style="{StaticResource HeaderTextStyle}"/>
+
+                <!-- Allergen Name -->
+                <TextBlock Text="Allergen Name:" 
+                           Style="{StaticResource LabelTextStyle}"/>
+                <TextBox x:Name="AllergenNameTextBox" 
+                         Text="{Binding AllergenName, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource TextBoxStyle}"/>
+
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            Margin="0,20,0,0">
+                    <Button Content="Submit" 
+                            Command="{Binding SubmitCommand}"
+                            Style="{StaticResource SubmitButtonStyle}"
+                            IsEnabled="{Binding CanSubmit, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Cancel" 
+                            Command="{Binding CancelCommand}"
+                            Style="{StaticResource CancelButtonStyle}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

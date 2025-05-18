@@ -2,6 +2,7 @@
 using RestaurantOrders.Database.Enums;
 using RestaurantOrders.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RestaurantOrders.Views
 {
@@ -16,6 +17,17 @@ namespace RestaurantOrders.Views
         {
             InitializeComponent();
             DataContext = new MenuViewModel(user, userType);
+        }
+        private void AdminMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Show the context menu when the button is clicked
+            Button button = (Button)sender;
+            if (button.ContextMenu != null)
+            {
+                button.ContextMenu.PlacementTarget = button;
+                button.ContextMenu.IsOpen = true;
+                e.Handled = true;
+            }
         }
     }
 }

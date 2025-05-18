@@ -11,6 +11,8 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        
         <Style x:Key="MenuCategoryStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -227,8 +229,8 @@
                             Style="{StaticResource AdminDropdownStyle}"
                             Grid.Column="0"
                             HorizontalAlignment="Left"
-                            Visibility="{Binding IsAdminVisibility}"
-                            Command="{Binding AdminMenuButton}">
+                            Visibility="{Binding IsAdminVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Click="AdminMenuButton_Click">
                         <Button.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Add Product" 
@@ -237,14 +239,20 @@
                                 <MenuItem Header="Add Allergen" 
                                           Command="{Binding CommandAddAllergen}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
-                                <MenuItem Header="Manage Products" 
-                                          Command="{Binding CommandManageProducts}"
-                                          Style="{StaticResource DropdownMenuItemStyle}"/>
-                                <MenuItem Header="Manage Allergens" 
-                                          Command="{Binding CommandManageAllergens}"
+                                <MenuItem Header="Add Category" 
+                                          Command="{Binding CommandAddCategory}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
                                 <MenuItem Header="Create Menu" 
                                           Command="{Binding CommandCreateMenu}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Delete Product" 
+                                          Command="{Binding CommandDeleteProduct}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Delete Allergen" 
+                                          Command="{Binding CommandDeleteAllergen}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Delete Category" 
+                                          Command="{Binding CommandDeleteCategory}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
                             </ContextMenu>
                         </Button.ContextMenu>

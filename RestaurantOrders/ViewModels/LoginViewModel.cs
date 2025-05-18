@@ -50,7 +50,7 @@ namespace RestaurantOrders.ViewModels
                 if (_password != value)
                 {
                     _password = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Password));
                 }
             }
         }

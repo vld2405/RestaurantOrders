@@ -1,6 +1,7 @@
 ﻿using RestaurantOrders.Database.Entities;
 using RestaurantOrders.Database.Enums;
 using RestaurantOrders.Models;
+using RestaurantOrders.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RestaurantOrders.ViewModels
@@ -17,9 +20,14 @@ namespace RestaurantOrders.ViewModels
         public MenuViewModel()
         {
             CommandAddProduct = new RelayCommand(AddProduct);
-            AdminMenuButton = new RelayCommand(OpenAdminMenuButton);
+            CommandAddAllergen = new RelayCommand(AddAllergen);
+            CommandCreateMenu = new RelayCommand(CreateMenu);
+            CommandDeleteProduct = new RelayCommand(DeleteProduct);
+            CommandDeleteAllergen = new RelayCommand(DeleteAllergen);
+            CommandAddCategory = new RelayCommand(AddCategory);
+            CommandDeleteCategory = new RelayCommand(DeleteCategory);
         }
-        public MenuViewModel(UserType userType)
+        public MenuViewModel(UserType userType) : this() 
         {
             if(userType == UserType.NoAccount)
             {
@@ -27,14 +35,8 @@ namespace RestaurantOrders.ViewModels
                 IsAdminVisibility = false;
             }
         }
-        public MenuViewModel(User user, UserType userType)
-        {
-            if (userType == UserType.NoAccount)
-            {
-                IsSubmitEnabled = false;
-                IsAdminVisibility = false;
-            }
-        }
+        public MenuViewModel(User user, UserType userType) : this(userType)
+        {}
 
         private bool _isSubmitEnabled = true;
         private bool _isAdminVisibility = true;
@@ -70,7 +72,12 @@ namespace RestaurantOrders.ViewModels
 
         #region Command-Declarations
         public ICommand CommandAddProduct { get; set; }
-        public ICommand AdminMenuButton { get; set; }
+        public ICommand CommandAddAllergen { get; set; }
+        public ICommand CommandCreateMenu { get; set; }
+        public ICommand CommandDeleteProduct { get; set; }
+        public ICommand CommandDeleteAllergen { get; set; }
+        public ICommand CommandAddCategory { get; set; }
+        public ICommand CommandDeleteCategory { get; set; }
 
         #endregion
 
@@ -78,13 +85,40 @@ namespace RestaurantOrders.ViewModels
 
         private void AddProduct()
         {
-
+            CreateProductWindow createProductWindow = new CreateProductWindow();
+            createProductWindow.Owner = Application.Current.MainWindow;
+            createProductWindow.ShowDialog();
         }
-
-        private void OpenAdminMenuButton()
+        private void AddAllergen()
+        {
+            CreateAllergenWindow createAllergenWindow = new CreateAllergenWindow();
+            createAllergenWindow.Owner = Application.Current.MainWindow;
+            createAllergenWindow.ShowDialog();
+        }
+        private void CreateMenu()
         {
 
         }
+        private void DeleteProduct()
+        {
+
+        }
+        private void DeleteAllergen()
+        {
+
+        }
+        private void AddCategory()
+        {
+
+        }
+        private void DeleteCategory()
+        {
+
+        }
+
+        // TODO: adminul poate vedea toate comenzile sortate descrescator dupa data si ora
+        // TODO: adminul poate schimba starea unei comenzi
+        // TODO: adminul poate vedea toate preparatele care se apropie de epuizare
 
         #endregion
 
