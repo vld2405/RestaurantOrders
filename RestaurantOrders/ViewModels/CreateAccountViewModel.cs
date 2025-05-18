@@ -167,7 +167,7 @@ namespace RestaurantOrders.ViewModels
                         if (result != null && result != DBNull.Value)
                         {
                             int userId = Convert.ToInt32(result);
-                            Console.WriteLine("userId = " + userId);
+
                             if (userId == -1)
                             {
                                 MessageBox.Show("A user with this email already exists.", "Registration Error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantOrders.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,9 @@ namespace RestaurantOrders.Views
         public CreateAllergenWindow()
         {
             InitializeComponent();
+
+            var viewModel = (CreateAllergenViewModel)DataContext;
+            viewModel.RequestClose += (sender, e) => this.Close();
         }
     }
 }

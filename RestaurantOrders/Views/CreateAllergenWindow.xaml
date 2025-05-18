@@ -115,7 +115,7 @@
                             HorizontalAlignment="Center" 
                             Margin="0,20,0,0">
                     <Button Content="Submit" 
-                            Command="{Binding SubmitCommand}"
+                            Command="{Binding CommandSubmit}"
                             Style="{StaticResource SubmitButtonStyle}"
                             IsEnabled="{Binding CanSubmit, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Cancel" 
