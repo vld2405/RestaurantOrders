@@ -11,13 +11,11 @@ namespace RestaurantOrders.Database
     {
         public RestaurantDbContext CreateDbContext(string[] args)
         {
-            // Build configuration
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            // Initialize AppConfig
             AppConfig.Init(configuration);
 
             var optionsBuilder = new DbContextOptionsBuilder<RestaurantDbContext>();

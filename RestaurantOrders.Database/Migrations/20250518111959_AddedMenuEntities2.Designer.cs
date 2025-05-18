@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantOrders.Database.Context;
 
@@ -10,9 +11,11 @@ using RestaurantOrders.Database.Context;
 namespace RestaurantOrders.Database.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518111959_AddedMenuEntities2")]
+    partial class AddedMenuEntities2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,10 +128,7 @@ namespace RestaurantOrders.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MenuId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
@@ -138,8 +138,6 @@ namespace RestaurantOrders.Database.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MenuId");
 
                     b.HasIndex("OrderId");
 
@@ -252,21 +250,17 @@ namespace RestaurantOrders.Database.Migrations
 
             modelBuilder.Entity("RestaurantOrders.Database.Entities.OrderDetail", b =>
                 {
-                    b.HasOne("RestaurantOrders.Database.Entities.Menu", "Menu")
-                        .WithMany()
-                        .HasForeignKey("MenuId");
-
                     b.HasOne("RestaurantOrders.Database.Entities.Order", "Order")
                         .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("RestaurantOrders.Database.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Menu");
 
                     b.Navigation("Order");
 

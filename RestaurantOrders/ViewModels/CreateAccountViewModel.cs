@@ -133,11 +133,6 @@ namespace RestaurantOrders.ViewModels
         {
             try
             {
-                // Get password from PasswordBox (you'll need to add this code to your CreateAccountWindow.xaml.cs)
-                // For this, update your button to use Click event in XAML:
-                // <Button x:Name="CreateAccountButton" Click="CreateAccountButton_Click" ... />
-
-                // Validate input
                 if (string.IsNullOrWhiteSpace(FirstName) ||
                     string.IsNullOrWhiteSpace(LastName) ||
                     string.IsNullOrWhiteSpace(Email) ||
@@ -155,16 +150,18 @@ namespace RestaurantOrders.ViewModels
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Add parameters
                         command.Parameters.AddWithValue("@FirstName", FirstName);
                         command.Parameters.AddWithValue("@LastName", LastName);
                         command.Parameters.AddWithValue("@Email", Email);
                         command.Parameters.AddWithValue("@PhoneNo", PhoneNo ?? string.Empty);
                         command.Parameters.AddWithValue("@Address", Address ?? string.Empty);
                         command.Parameters.AddWithValue("@Password", Password); // Consider hashing
-                        command.Parameters.AddWithValue("@UserType", (int)UserType.Client); // Default to Client
 
-                        // Execute the procedure and get the result
+                        if (Email.Contains("@admin."))
+                            command.Parameters.AddWithValue("@UserType", (int)UserType.Employee);
+                        else
+                            command.Parameters.AddWithValue("@UserType", (int)UserType.Client);
+
                         var result = command.ExecuteScalar();
 
                         if (result != null && result != DBNull.Value)

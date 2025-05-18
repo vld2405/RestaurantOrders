@@ -103,10 +103,12 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#2E7D32"/>
                 </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Search Box Style -->
         <Style x:Key="SearchBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="36"/>
             <Setter Property="Padding" Value="30,8,10,8"/>

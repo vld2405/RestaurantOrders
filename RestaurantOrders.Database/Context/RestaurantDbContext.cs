@@ -11,6 +11,8 @@ namespace RestaurantOrders.Database.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Allergen> Allergens { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<MenuDetail> MenuDetails { get; set; }
 
         public RestaurantDbContext() { }
 

@@ -12,6 +12,7 @@ namespace RestaurantOrders.Database.Enums
         Appetizer,
         Supes,
         Dessert,
-        Drink
+        Drink,
+        Menu
     }
 }
