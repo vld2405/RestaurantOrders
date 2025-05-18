@@ -103,6 +103,9 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#2E7D32"/>
                 </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#246327"/>
+                </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Background" Value="#CCCCCC"/>
                 </Trigger>
@@ -137,12 +140,68 @@
                                            Margin="{TemplateBinding Padding}" 
                                            Foreground="LightGray" 
                                            VerticalAlignment="Center"/>
-                                           <!--Visibility="{Binding Text.IsEmpty, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" -->
+                                <!--Visibility="{Binding Text.IsEmpty, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" -->
                             </Grid>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <!-- New Admin Menu Button Style -->
+        <Style x:Key="AdminDropdownStyle" TargetType="Button">
+            <Setter Property="Background" Value="#572f0e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0"
+                                                  HorizontalAlignment="Left" 
+                                                  VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}"/>
+                                <Path Grid.Column="1" 
+                                      Margin="5,0,10,0"
+                                      Data="M 0,0 L 6,6 L 12,0 Z" 
+                                      Fill="White" 
+                                      VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#40230b"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#301b09"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Menu Item Style -->
+        <Style x:Key="DropdownMenuItemStyle" TargetType="MenuItem">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0F0F0"/>
+                    <Setter Property="BorderBrush" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -155,17 +214,54 @@
         <!-- Menu Items (Left Side) -->
         <ScrollViewer Grid.Column="0" Padding="20">
             <StackPanel>
-                <TextBlock Text="Restaurant Menu" 
-                           FontSize="28" 
-                           FontWeight="Bold" 
-                           Margin="0,0,0,15"
-                           HorizontalAlignment="Center"/>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Admin Management Button with Dropdown -->
+                    <Button x:Name="AdminMenuButton"
+                            Content="Management" 
+                            Style="{StaticResource AdminDropdownStyle}"
+                            Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            Visibility="{Binding IsAdminVisibility}"
+                            Command="{Binding AdminMenuButton}">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Add Product" 
+                                          Command="{Binding CommandAddProduct}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Add Allergen" 
+                                          Command="{Binding CommandAddAllergen}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Manage Products" 
+                                          Command="{Binding CommandManageProducts}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Manage Allergens" 
+                                          Command="{Binding CommandManageAllergens}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Create Menu" 
+                                          Command="{Binding CommandCreateMenu}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+
+                    <TextBlock Text="Restaurant Menu" 
+                               FontSize="28" 
+                               FontWeight="Bold" 
+                               Grid.Column="1"
+                               HorizontalAlignment="Center"/>
+                </Grid>
 
                 <!-- Search Bar -->
                 <Grid Margin="0,0,0,20">
                     <TextBox x:Name="SearchBox" 
                              Style="{StaticResource SearchBoxStyle}"/>
-                             <!-- TextChanged="SearchBox_TextChanged" -->
+                    <!-- TextChanged="SearchBox_TextChanged" -->
                 </Grid>
 
                 <!-- Appetizers -->
@@ -449,6 +545,9 @@
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="#2E7D32"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#246327"/>
                                     </Trigger>
                                     <Trigger Property="IsEnabled" Value="False">
                                         <Setter Property="Background" Value="#CCCCCC"/>

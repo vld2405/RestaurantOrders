@@ -59,7 +59,7 @@ namespace RestaurantOrders.ViewModels
 
         #region CommandMethods
 
-        public void LoginButtonClicked()
+        private void LoginButtonClicked()
         {
             try
             {
@@ -144,7 +144,7 @@ namespace RestaurantOrders.ViewModels
             return user;
         }
 
-        public void CreateAccountClicked()
+        private void CreateAccountClicked()
         {
             CreateAccountWindow accountWindow = new CreateAccountWindow();
             accountWindow.Show();
@@ -153,7 +153,7 @@ namespace RestaurantOrders.ViewModels
             Application.Current.MainWindow = accountWindow;
         }
         
-        public void NoAccountEnteringClicked()
+        private void NoAccountEnteringClicked()
         {
             MenuWindow menuWindow = new MenuWindow(UserType.NoAccount);
             menuWindow.Show();
