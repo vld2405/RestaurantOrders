@@ -13,10 +13,10 @@
     <Window.DataContext>
         <vms:CreateProductViewModel/>
     </Window.DataContext>
-    
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        
+
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -50,7 +50,8 @@
         </Style>
 
         <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="40"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Width" Value="85"/>
             <Setter Property="Padding" Value="15,0"/>
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -59,18 +60,18 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                                CornerRadius="10"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
+                        CornerRadius="10"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"/>
+                                      VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="SaveButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+        <Style x:Key="SubmitButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
             <Setter Property="Background" Value="#e69149"/>
             <Setter Property="Foreground" Value="White"/>
             <Style.Triggers>
@@ -79,6 +80,9 @@
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="#996131"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -121,15 +125,16 @@
                     <TextBlock Text="Product Name:" 
                                Style="{StaticResource LabelTextStyle}"/>
                     <TextBox x:Name="ProductNameTextBox" 
-                             Text="{Binding ProductName, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource TextBoxStyle}"/>
 
-                    <!-- Product Type -->
-                    <TextBlock Text="Product Type:" 
+                    <!-- Category Selection -->
+                    <TextBlock Text="Category:" 
                                Style="{StaticResource LabelTextStyle}"/>
-                    <ComboBox x:Name="ProductTypeComboBox"
-                              ItemsSource="{Binding ProductTypes}"
-                              SelectedItem="{Binding SelectedProductType}"
+                    <ComboBox x:Name="CategoryComboBox"
+                              ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory}"
+                              DisplayMemberPath="Name"
                               Style="{StaticResource ComboBoxStyle}"/>
 
                     <!-- Price -->
@@ -139,40 +144,53 @@
                              Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource NumericTextBoxStyle}"/>
 
+                    <!-- Quantity -->
+                    <TextBlock Text="Quantity:" 
+                               Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox x:Name="QuantityTextBox" 
+                             Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource NumericTextBoxStyle}"/>
+
+                    <!-- Allergens Section -->
                     <!-- Allergens Section -->
                     <TextBlock Text="Allergens:" 
-                               Style="{StaticResource LabelTextStyle}"/>
+           Style="{StaticResource LabelTextStyle}"/>
                     <Border BorderBrush="#CCCCCC" 
-                            BorderThickness="1" 
-                            Padding="10" 
-                            Margin="0,5,0,15">
-                        <ItemsControl ItemsSource="{Binding AvailableAllergens}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox Content="{Binding Name}" 
-                                              IsChecked="{Binding IsSelected}" 
-                                              Style="{StaticResource CheckBoxStyle}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+        BorderThickness="1" 
+        Padding="10" 
+        Margin="0,5,0,15">
+                        <Grid>
+                            <UniformGrid Columns="3">
+                                <!-- Adjust the number of columns as needed -->
+                                <ItemsControl ItemsSource="{Binding AvailableAllergens}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Vertical" MaxHeight="125"/>
+                                            <!-- Adjust height based on number of items -->
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" 
+                                  IsChecked="{Binding IsSelected}" 
+                                  Style="{StaticResource CheckBoxStyle}"
+                                  Margin="5,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </UniformGrid>
+                        </Grid>
                     </Border>
-
-                    <!-- Validation Message -->
-                    <TextBlock Text="{Binding ValidationMessage}" 
-                               Foreground="Red" 
-                               TextWrapping="Wrap"
-                               Margin="0,10,0,15"
-                               Visibility="{Binding HasValidationMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                     <!-- Buttons -->
                     <StackPanel Orientation="Horizontal" 
                                 HorizontalAlignment="Center" 
                                 Margin="0,20,0,0">
-                        <Button Content="Save Product" 
-                                Command="{Binding SaveCommand}"
-                                Style="{StaticResource SaveButtonStyle}"/>
+                        <Button Content="Submit" 
+                                Command="{Binding CommandSubmit}"
+                                Style="{StaticResource SubmitButtonStyle}"/>
                         <Button Content="Cancel" 
-                                Command="{Binding CancelCommand}"
+                                Command="{Binding CommandCancel}"
                                 Style="{StaticResource CancelButtonStyle}"/>
                     </StackPanel>
                 </StackPanel>

@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using RestaurantOrders.Infrastructure.Config;
+using RestaurantOrders.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +26,19 @@ namespace RestaurantOrders.Views
         public CreateProductWindow()
         {
             InitializeComponent();
+
+            if (AppConfig.ConnectionStrings?.RestaurantOrdersDatabase == null)
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .Build();
+
+                AppConfig.Init(configuration);
+            }
+
+            var viewModel = (CreateProductViewModel)DataContext;
+            viewModel.RequestClose += (sender, e) => this.Close();
         }
     }
 }
