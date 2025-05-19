@@ -53,7 +53,9 @@ namespace RestaurantOrders.ViewModels
         }
 
         public MenuViewModel(User user, UserType userType) : this(userType)
-        { }
+        {
+            CurrentUser = user;
+        }
 
         private bool _isSubmitEnabled = true;
         private bool _isAdminVisibility = true;
@@ -62,7 +64,19 @@ namespace RestaurantOrders.ViewModels
         private decimal _cartTotal;
         private ObservableCollection<ProductItemViewModel> _cartItems;
 
+        private User _currentUser;
+
         #region getters-setters
+
+        public User CurrentUser
+        {
+            get => _currentUser;
+            set
+            {
+                _currentUser = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<CategoryWithProducts> CategoriesWithProducts
         {
@@ -233,17 +247,109 @@ namespace RestaurantOrders.ViewModels
 
         private void PlaceOrder()
         {
-            // Implement order placement logic
-            MessageBox.Show("Your order has been placed!", "Order Placed", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // Reset cart
-            foreach (var product in CartItems)
+            try
             {
-                product.OrderQuantity = 0;
-                product.TempQuantity = 0;
-            }
+                // Check if there are items in the cart
+                if (!CartItems.Any())
+                {
+                    MessageBox.Show("Your cart is empty. Please add items to your order.", "Empty Cart", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
 
-            UpdateCart();
+                // Create lists to store products and menus separately
+                List<int> productIds = new List<int>();
+                List<int> menuIds = new List<int>();
+                List<int> quantities = new List<int>();
+
+                // Separate products and menus for the SQL procedure
+                foreach (var item in CartItems)
+                {
+                    if (item.IsMenu)
+                    {
+                        menuIds.Add(item.Id);
+                        quantities.Add(item.OrderQuantity);
+                    }
+                    else
+                    {
+                        productIds.Add(item.Id);
+                        quantities.Add(item.OrderQuantity);
+                    }
+                }
+
+                // Convert to comma-separated strings for SQL
+                string productIdsStr = string.Join(",", productIds);
+                string menuIdsStr = string.Join(",", menuIds);
+                string quantitiesStr = string.Join(",", quantities);
+
+                using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
+                {
+                    connection.Open();
+
+                    using (var command = new SqlCommand("AddOrder", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Check if using a logged-in user or anonymous user
+                        int userId = 1; // Default to user ID 1 for anonymous or testing
+
+                        // Get actual user ID if available
+                        if (CurrentUser != null && CurrentUser.Id > 0)
+                        {
+                            userId = CurrentUser.Id;
+                        }
+
+                        command.Parameters.AddWithValue("@UserId", userId);
+                        command.Parameters.AddWithValue("@OrderState", (int)OrderState.Registered);
+                        command.Parameters.AddWithValue("@ProductIds", productIdsStr);
+
+                        // Only add MenuIds parameter if there are menus in the order
+                        if (menuIds.Count > 0)
+                            command.Parameters.AddWithValue("@MenuIds", menuIdsStr);
+                        else
+                            command.Parameters.AddWithValue("@MenuIds", DBNull.Value);
+
+                        command.Parameters.AddWithValue("@Quantities", quantitiesStr);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int orderId = reader.GetInt32(reader.GetOrdinal("OrderId"));
+                                string message = reader.GetString(reader.GetOrdinal("Message"));
+
+                                if (orderId > 0)
+                                {
+                                    // Get the estimated delivery time from the result
+                                    DateTime estimatedDelivery = reader.GetDateTime(reader.GetOrdinal("EstimatedDeliveryTime"));
+
+                                    // Format the time for display
+                                    string deliveryTimeStr = estimatedDelivery.ToString("hh:mm tt");
+
+                                    MessageBox.Show($"Your order #{orderId} has been placed successfully!\n\nEstimated delivery time: {deliveryTimeStr}",
+                                        "Order Placed", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                    // Reset cart
+                                    foreach (var product in CartItems)
+                                    {
+                                        product.OrderQuantity = 0;
+                                        product.TempQuantity = 0;
+                                    }
+
+                                    UpdateCart();
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Failed to place order: {message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion

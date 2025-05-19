@@ -13,6 +13,8 @@ namespace RestaurantOrders.Database.Entities
         public int UserId { get; set; }
         public User User { get; set; } = null!;
         public ICollection<OrderDetail> OrderDetails { get; set; } = null!;
-        public OrderState OrderState;
+        public OrderState OrderState { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime EstimatedDeliveryTime { get; set; }
     }
 }
