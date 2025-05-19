@@ -82,15 +82,15 @@ namespace RestaurantOrders.ViewModels
 
         public bool IsInCart => OrderQuantity > 0;
 
-        public ICommand IncreaseQuantityCommand { get; set; }
-        public ICommand DecreaseQuantityCommand { get; set; }
-        public ICommand AddToCartCommand { get; set; }
+        public ICommand CommandIncreaseQuantity { get; set; }
+        public ICommand CommandDecreaseQuantity { get; set; }
+        public ICommand CommandAddToCart { get; set; }
 
         public ProductItemViewModel()
         {
-            IncreaseQuantityCommand = new RelayCommand(IncreaseQuantity);
-            DecreaseQuantityCommand = new RelayCommand(DecreaseQuantity, CanDecreaseQuantity);
-            AddToCartCommand = new RelayCommand(AddToCart, CanAddToCart);
+            CommandIncreaseQuantity = new RelayCommand(IncreaseQuantity);
+            CommandDecreaseQuantity = new RelayCommand(DecreaseQuantity, CanDecreaseQuantity);
+            CommandAddToCart = new RelayCommand(AddToCart, CanAddToCart);
         }
 
         private void IncreaseQuantity()

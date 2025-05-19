@@ -256,6 +256,12 @@
                                 <MenuItem Header="Delete Category" 
                                           Command="{Binding CommandDeleteCategory}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Show Orders" 
+                                          Command="{Binding CommandShowOrders}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Stock Stats" 
+                                          Command="{Binding CommandShowStockStats}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -274,16 +280,14 @@
                     <!-- TextChanged="SearchBox_TextChanged" -->
                 </Grid>
 
-                <!-- Dynamic Categories and Products -->
+                <!-- Menu -->
                 <ItemsControl ItemsSource="{Binding CategoriesWithProducts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <!-- Category Name -->
                                 <TextBlock Text="{Binding Category.Name}" 
                                   Style="{StaticResource MenuCategoryStyle}"/>
 
-                                <!-- Products in Category -->
                                 <WrapPanel>
                                     <ItemsControl ItemsSource="{Binding Products}">
                                         <ItemsControl.ItemsPanel>
@@ -299,25 +303,38 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
                                                         </Grid.RowDefinitions>
 
-                                                        <TextBlock Text="{Binding Name}" Style="{StaticResource ItemNameStyle}" Grid.Row="0"/>
-                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" Style="{StaticResource ItemPriceStyle}" Grid.Row="1"/>
+                                                        <TextBlock Text="{Binding Name}" 
+                                                                   Style="{StaticResource ItemNameStyle}" 
+                                                                   Grid.Row="0"/>
+                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
+                                                                   Style="{StaticResource ItemPriceStyle}" 
+                                                                   Grid.Row="1"/>
 
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,10,0,0">
+                                                        <TextBlock Grid.Row="2" Margin="0,5,0,0">
+                                                            <Run Text="Portion: " FontStyle="Italic"/>
+                                                            <Run Text="{Binding Quantity}" FontWeight="SemiBold"/>
+                                                            <Run Text="g" FontWeight="SemiBold"/>
+                                                        </TextBlock>
+
+                                                        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,10,0,0">
                                                             <Button Content="-" 
-                                                           Style="{StaticResource QuantityButtonStyle}"
-                                                           Command="{Binding DecreaseQuantityCommand}"/>
+                                                                    Style="{StaticResource QuantityButtonStyle}"
+                                                                    Command="{Binding CommandDecreaseQuantity}"
+                                                                    IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                                             <TextBlock Text="{Binding OrderQuantity}" 
-                                                              Style="{StaticResource QuantityTextStyle}"/>
+                                                                       Style="{StaticResource QuantityTextStyle}"/>
                                                             <Button Content="+" 
-                                                           Style="{StaticResource QuantityButtonStyle}"
-                                                           Command="{Binding IncreaseQuantityCommand}"/>
+                                                                    Style="{StaticResource QuantityButtonStyle}"
+                                                                    Command="{Binding CommandIncreaseQuantity}"
+                                                                    IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                                             <Button Content="Add to Cart" 
-                                                           Style="{StaticResource AddToCartButtonStyle}" 
-                                                           Margin="15,0,0,0"
-                                                           Command="{Binding AddToCartCommand}"
-                                                           IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                                    Style="{StaticResource AddToCartButtonStyle}" 
+                                                                    Margin="15,0,0,0"
+                                                                    Command="{Binding CommandAddToCart}"
+                                                                    IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>
