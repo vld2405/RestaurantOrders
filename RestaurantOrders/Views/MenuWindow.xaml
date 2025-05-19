@@ -14,7 +14,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <helper:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
-        
+
         <Style x:Key="MenuCategoryStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -152,7 +152,7 @@
             </Setter>
         </Style>
 
-        <!-- New Admin Menu Button Style -->
+        <!-- Admin Menu Button Style -->
         <Style x:Key="AdminDropdownStyle" TargetType="Button">
             <Setter Property="Background" Value="#572f0e"/>
             <Setter Property="Foreground" Value="White"/>
@@ -324,7 +324,7 @@
                                                                     Style="{StaticResource QuantityButtonStyle}"
                                                                     Command="{Binding CommandDecreaseQuantity}"
                                                                     IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                                            <TextBlock Text="{Binding OrderQuantity}" 
+                                                            <TextBlock Text="{Binding TempQuantity}" 
                                                                        Style="{StaticResource QuantityTextStyle}"/>
                                                             <Button Content="+" 
                                                                     Style="{StaticResource QuantityButtonStyle}"

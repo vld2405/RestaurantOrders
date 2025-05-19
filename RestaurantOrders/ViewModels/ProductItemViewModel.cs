@@ -1,11 +1,7 @@
 ﻿using RestaurantOrders.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RestaurantOrders.ViewModels
@@ -18,6 +14,7 @@ namespace RestaurantOrders.ViewModels
         private int _quantity;
         private int _categoryId;
         private int _orderQuantity = 0;
+        private int _tempQuantity = 0; // Temporary quantity for display before adding to cart
 
         public int Id
         {
@@ -80,7 +77,21 @@ namespace RestaurantOrders.ViewModels
             }
         }
 
+        // This property is bound to the UI for display
+        public int TempQuantity
+        {
+            get => _tempQuantity;
+            set
+            {
+                _tempQuantity = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsInCart => OrderQuantity > 0;
+
+        // Event for when the product is added to cart
+        public event EventHandler<EventArgs> AddedToCart;
 
         public ICommand CommandIncreaseQuantity { get; set; }
         public ICommand CommandDecreaseQuantity { get; set; }
@@ -95,22 +106,24 @@ namespace RestaurantOrders.ViewModels
 
         private void IncreaseQuantity()
         {
-            OrderQuantity++;
+            TempQuantity++;
         }
 
         private void DecreaseQuantity()
         {
-            if (OrderQuantity > 0)
-                OrderQuantity--;
+            if (TempQuantity > 0)
+                TempQuantity--;
         }
 
-        private bool CanDecreaseQuantity() => OrderQuantity > 0;
+        private bool CanDecreaseQuantity() => TempQuantity > 0;
 
         private void AddToCart()
         {
-            // This will be handled by the parent view model
-            if (OrderQuantity == 0)
-                OrderQuantity = 1;
+            if (TempQuantity > 0)
+            {
+                OrderQuantity += TempQuantity;
+                AddedToCart?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private bool CanAddToCart() => Quantity > 0;

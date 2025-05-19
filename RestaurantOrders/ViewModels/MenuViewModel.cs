@@ -38,21 +38,21 @@ namespace RestaurantOrders.ViewModels
 
             LoadCategoriesAndProducts();
         }
-        public MenuViewModel(UserType userType) : this() 
+        public MenuViewModel(UserType userType) : this()
         {
-            if(userType == UserType.NoAccount)
+            if (userType == UserType.NoAccount)
             {
                 IsSubmitEnabled = false;
                 IsAdminVisibility = false;
             }
-            if(userType == UserType.Client)
+            if (userType == UserType.Client)
             {
                 IsAdminVisibility = false;
             }
         }
 
         public MenuViewModel(User user, UserType userType) : this(userType)
-        {}
+        { }
 
         private bool _isSubmitEnabled = true;
         private bool _isAdminVisibility = true;
@@ -93,8 +93,8 @@ namespace RestaurantOrders.ViewModels
             }
         }
 
-        public bool IsSubmitEnabled 
-        { 
+        public bool IsSubmitEnabled
+        {
             get
             {
                 return _isSubmitEnabled;
@@ -170,16 +170,10 @@ namespace RestaurantOrders.ViewModels
 
         }
 
-        // TODO: adminul poate vedea toate comenzile sortate descrescator dupa data si ora
-        // TODO: adminul poate schimba starea unei comenzi
-        // TODO: adminul poate vedea toate preparatele care se apropie de epuizare
-
-        private void Product_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        // Event handler for when a product is added to cart
+        private void Product_AddedToCart(object sender, EventArgs e)
         {
-            if (e.PropertyName == nameof(ProductItemViewModel.OrderQuantity))
-            {
-                UpdateCart();
-            }
+            UpdateCart();
         }
 
         private void UpdateCart()
@@ -218,6 +212,7 @@ namespace RestaurantOrders.ViewModels
             foreach (var product in CartItems)
             {
                 product.OrderQuantity = 0;
+                product.TempQuantity = 0;
             }
 
             UpdateCart();
@@ -271,8 +266,8 @@ namespace RestaurantOrders.ViewModels
                                         CategoryId = category.Id
                                     };
 
-                                    // Subscribe to property changes to update cart
-                                    product.PropertyChanged += Product_PropertyChanged;
+                                    // Subscribe to the AddedToCart event instead of PropertyChanged
+                                    product.AddedToCart += Product_AddedToCart;
 
                                     productsInCategory.Add(product);
                                 }
