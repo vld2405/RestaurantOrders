@@ -86,7 +86,7 @@ namespace RestaurantOrders.ViewModels
                                 return;
                             }
 
-                            MessageBox.Show("Allergen added successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show("Category added successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
                             OnRequestClose();
                         }

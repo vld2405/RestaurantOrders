@@ -27,15 +27,15 @@ namespace RestaurantOrders.Views
         {
             InitializeComponent();
 
-            if (AppConfig.ConnectionStrings?.RestaurantOrdersDatabase == null)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false)
-                    .Build();
+            //if (AppConfig.ConnectionStrings?.RestaurantOrdersDatabase == null)
+            //{
+            //    var configuration = new ConfigurationBuilder()
+            //        .SetBasePath(Directory.GetCurrentDirectory())
+            //        .AddJsonFile("appsettings.json", optional: false)
+            //        .Build();
 
-                AppConfig.Init(configuration);
-            }
+            //    AppConfig.Init(configuration);
+            //}
 
             var viewModel = (CreateProductViewModel)DataContext;
             viewModel.RequestClose += (sender, e) => this.Close();

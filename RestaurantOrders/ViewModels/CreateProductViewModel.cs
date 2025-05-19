@@ -27,7 +27,7 @@ namespace RestaurantOrders.ViewModels
         }
 
         private string _name = string.Empty;
-        private Category _selectedCategory;
+        private CategoryViewModel _selectedCategory;
         private decimal _price;
         private int _quantity = 1;
         private ObservableCollection<CategoryViewModel> _categories = new ObservableCollection<CategoryViewModel>();
@@ -50,7 +50,7 @@ namespace RestaurantOrders.ViewModels
                 }
             }
         }
-        public Category SelectedCategory
+        public CategoryViewModel SelectedCategory
         {
             get => _selectedCategory;
             set
@@ -122,7 +122,102 @@ namespace RestaurantOrders.ViewModels
         #region Command-Methods
         private void SubmitButton()
         {
+            try
+            {
+                // Basic validation
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    MessageBox.Show("Please enter a product name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
+                if (Price <= 0)
+                {
+                    MessageBox.Show("Price must be greater than zero.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (Quantity <= 0)
+                {
+                    MessageBox.Show("Quantity must be greater than zero.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var selectedCategory = Categories.FirstOrDefault(c => c.Id == SelectedCategory?.Id);
+                if (selectedCategory == null)
+                {
+                    MessageBox.Show("Please select a category.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Get selected allergens
+                var selectedAllergens = AvailableAllergens.Where(a => a.IsSelected).ToList();
+                string allergenIds = string.Join(",", selectedAllergens.Select(a => a.Id));
+
+                using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
+                {
+                    connection.Open();
+
+                    using (var command = new SqlCommand("AddProduct", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Add parameters
+                        command.Parameters.AddWithValue("@Name", Name);
+                        command.Parameters.AddWithValue("@Quantity", Quantity);
+                        command.Parameters.AddWithValue("@CategoryId", selectedCategory.Id);
+                        command.Parameters.AddWithValue("@Price", Price);
+
+                        // Add allergens parameter (null if no allergens selected)
+                        if (!string.IsNullOrEmpty(allergenIds))
+                        {
+                            command.Parameters.AddWithValue("@AllergenIds", allergenIds);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@AllergenIds", DBNull.Value);
+                        }
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int productId = reader.GetInt32(reader.GetOrdinal("ProductId"));
+                                string message = reader.GetString(reader.GetOrdinal("Message"));
+
+                                if (productId > 0)
+                                {
+                                    MessageBox.Show("Product added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    ClearForm();
+                                    OnRequestClose();
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Failed to add product: {message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ClearForm()
+        {
+            Name = string.Empty;
+            Price = 0;
+            Quantity = 1;
+            SelectedCategory = null;
+
+            // Reset allergen selections
+            foreach (var allergen in AvailableAllergens)
+            {
+                allergen.IsSelected = false;
+            }
         }
         private void CancelButton()
         {
