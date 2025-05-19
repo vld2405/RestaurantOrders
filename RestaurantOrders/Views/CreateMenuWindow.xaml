@@ -1,0 +1,371 @@
+﻿<Window x:Class="RestaurantOrders.Views.CreateMenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestaurantOrders.Views"
+        xmlns:vms="clr-namespace:RestaurantOrders.ViewModels"
+        mc:Ignorable="d"
+        Title="Create Menu" Height="700" Width="800"
+        Icon="/Images/KETO.png"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vms:CreateMenuViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <Style x:Key="LabelTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="NumericTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
+            <!-- Additional settings for numeric input if needed -->
+        </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="35"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AddButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+            <Setter Property="Background" Value="#e69149"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#bf793d"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#996131"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="RemoveButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
+            <Setter Property="Background" Value="#F44336"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#D32F2F"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#B71C1C"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SubmitButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#e69149"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#bf793d"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#996131"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#572f0e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#40230b"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#301b09"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataGridStyle" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F9F9F9"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#EEEEEE"/>
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Border Background="#F0F0F0" 
+                CornerRadius="8" 
+                Width="750" 
+                Height="650"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1"
+                Padding="25">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Create Menu" 
+                               Style="{StaticResource HeaderTextStyle}"/>
+
+                    <!-- Basic Menu Information -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Menu Name -->
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Menu Name:" 
+                                       Style="{StaticResource LabelTextStyle}"/>
+                            <TextBox x:Name="MenuNameTextBox" 
+                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource TextBoxStyle}"/>
+                        </StackPanel>
+
+                        <!-- Category Selection -->
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                            <TextBlock Text="Category:" 
+                                       Style="{StaticResource LabelTextStyle}"/>
+                            <ComboBox x:Name="CategoryComboBox"
+                                      ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding SelectedCategory}"
+                                      DisplayMemberPath="Name"
+                                      Style="{StaticResource ComboBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Product Selection Section -->
+                    <TextBlock Text="Add Products to Menu" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Product Selection -->
+                        <ComboBox x:Name="ProductComboBox"
+                                  Grid.Column="0"
+                                  ItemsSource="{Binding AvailableProducts}"
+                                  SelectedItem="{Binding SelectedProduct}"
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource ComboBoxStyle}"/>
+
+                        <!-- Quantity Input -->
+                        <TextBox x:Name="QuantityTextBox"
+                                 Grid.Column="1"
+                                 Text="{Binding ProductQuantity, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource NumericTextBoxStyle}"
+                                 Margin="10,0,0,0"/>
+
+                        <!-- Add Button -->
+                        <Button Grid.Column="2"
+                                Content="+" 
+                                Command="{Binding CommandAddProduct}"
+                                Style="{StaticResource AddButtonStyle}"
+                                FontSize="18"/>
+                    </Grid>
+
+                    <!-- Products List -->
+                    <DataGrid x:Name="ProductsDataGrid"
+                              ItemsSource="{Binding MenuProducts}"
+                              Height="150"
+                              Style="{StaticResource DataGridStyle}"
+                              Margin="0,0,0,20">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Product.Price, StringFormat={}{0:F2} RON}" Width="100" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="80" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Total" Binding="{Binding TotalPrice, StringFormat={}{0:F2} RON}" Width="100" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Width="40">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="X"
+                                                Command="{Binding DataContext.CommandRemoveProduct, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource RemoveButtonStyle}"
+                                                Margin="0"
+                                                FontSize="12"
+                                                Width="30"
+                                                Height="24"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Menu Price Summary -->
+                    <Border Background="#F9F9F9" 
+                            BorderBrush="#CCCCCC" 
+                            BorderThickness="1" 
+                            Padding="15" 
+                            Margin="0,0,0,20">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Total Products Price:" 
+                                       Grid.Column="0" 
+                                       Grid.Row="0"
+                                       FontSize="14"/>
+                            <TextBlock Text="{Binding TotalProductsPrice, StringFormat={}{0:F2} RON}" 
+                                       Grid.Column="1" 
+                                       Grid.Row="0"
+                                       FontSize="14"
+                                       HorizontalAlignment="Right"/>
+
+                            <TextBlock Text="Discount Applied:" 
+                                       Grid.Column="0" 
+                                       Grid.Row="1"
+                                       FontSize="14"
+                                       Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding DiscountPercentage, StringFormat={}{0}%}" 
+                                       Grid.Column="1" 
+                                       Grid.Row="1"
+                                       FontSize="14"
+                                       HorizontalAlignment="Right"
+                                       Margin="0,5,0,0"/>
+
+                            <Border Grid.Column="0" 
+                                    Grid.ColumnSpan="2" 
+                                    Grid.Row="2"
+                                    BorderBrush="#CCCCCC" 
+                                    BorderThickness="0,1,0,0" 
+                                    Margin="0,10,0,0" 
+                                    Padding="0,10,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Final Menu Price:" 
+                                               Grid.Column="0"
+                                               FontSize="16"
+                                               FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding CalculatedPrice, StringFormat={}{0:F2} RON}" 
+                                               Grid.Column="1"
+                                               FontSize="16"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                Margin="0,10,0,0">
+                        <Button Content="Create Menu" 
+                                Command="{Binding CommandSubmit}"
+                                Style="{StaticResource SubmitButtonStyle}"
+                                Width="120"
+                                IsEnabled="{Binding CanSubmit}"/>
+                        <Button Content="Cancel" 
+                                Command="{Binding CommandCancel}"
+                                Style="{StaticResource CancelButtonStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

@@ -2,7 +2,6 @@
 using Microsoft.Data.SqlClient;
 using RestaurantOrders.Database.Entities;
 using RestaurantOrders.Database.Enums;
-using RestaurantOrders.Database.Enums;
 using RestaurantOrders.Infrastructure.Config;
 using RestaurantOrders.Models;
 using RestaurantOrders.Views;
@@ -16,7 +15,6 @@ namespace RestaurantOrders.ViewModels
 {
     public class LoginViewModel : INotifyPropertyChanged
     {
-        //TODO 1: Logica pentru creat useri si tot. + sa vad cum fac cu baza de date
         public LoginViewModel()
         {
             CommandLoginButton = new RelayCommand(LoginButtonClicked);

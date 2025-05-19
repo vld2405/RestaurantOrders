@@ -253,6 +253,9 @@
                                 <MenuItem Header="Delete Allergen" 
                                           Command="{Binding CommandDeleteAllergen}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
+                                <MenuItem Header="Delete Menu" 
+                                          Command="{Binding CommandDeleteMenu}"
+                                          Style="{StaticResource DropdownMenuItemStyle}"/>
                                 <MenuItem Header="Delete Category" 
                                           Command="{Binding CommandDeleteCategory}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>

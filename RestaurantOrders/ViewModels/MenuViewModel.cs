@@ -30,6 +30,7 @@ namespace RestaurantOrders.ViewModels
             CommandCreateMenu = new RelayCommand(CreateMenu);
             CommandDeleteProduct = new RelayCommand(DeleteProduct);
             CommandDeleteAllergen = new RelayCommand(DeleteAllergen);
+            CommandDeleteMenu = new RelayCommand(DeleteMenu);
             CommandDeleteCategory = new RelayCommand(DeleteCategory);
             CommandPlaceOrder = new RelayCommand(PlaceOrder, CanPlaceOrder);
 
@@ -127,6 +128,7 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandCreateMenu { get; set; }
         public ICommand CommandDeleteProduct { get; set; }
         public ICommand CommandDeleteAllergen { get; set; }
+        public ICommand CommandDeleteMenu { get; set; }
         public ICommand CommandAddCategory { get; set; }
         public ICommand CommandDeleteCategory { get; set; }
         public ICommand CommandPlaceOrder { get; set; }
@@ -160,7 +162,9 @@ namespace RestaurantOrders.ViewModels
         }
         private void CreateMenu()
         {
-
+            CreateMenuWindow createMenuWindow = new CreateMenuWindow();
+            createMenuWindow.Owner = Application.Current.MainWindow;
+            createMenuWindow.ShowDialog();
         }
         private void DeleteProduct()
         {
@@ -170,15 +174,19 @@ namespace RestaurantOrders.ViewModels
         {
 
         }
+        private void DeleteCategory()
+        {
+
+        }
+        private void DeleteMenu()
+        {
+
+        }
         private void AddCategory()
         {
             CreateCategoryWindow createCategoryWindow = new CreateCategoryWindow();
             createCategoryWindow.Owner = Application.Current.MainWindow;
             createCategoryWindow.ShowDialog();
-        }
-        private void DeleteCategory()
-        {
-
         }
 
         // Event handler for when a product is added to cart
