@@ -8,6 +8,6 @@ namespace RestaurantOrders.Infrastructure.Config.Models
 {
     public class QuantityThresholdSettings
     {
-        public int QuantityThreshold { get; set; }
+        public string QuantityThreshold { get; set; }
     }
 }

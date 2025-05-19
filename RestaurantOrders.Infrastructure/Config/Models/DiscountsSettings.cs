@@ -8,7 +8,7 @@ namespace RestaurantOrders.Infrastructure.Config.Models
 {
     public class DiscountsSettings
     {
-        public int MenuItemDiscount { get; set; }
-        public int LargeOrderDiscount { get; set; }
+        public string MenuDiscount { get; set; }
+        public string LargeOrderDiscount { get; set; }
     }
 }

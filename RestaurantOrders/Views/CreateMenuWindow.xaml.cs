@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantOrders.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,21 @@ namespace RestaurantOrders.Views
     /// </summary>
     public partial class CreateMenuWindow : Window
     {
+        public event EventHandler MenuAdded;
+
         public CreateMenuWindow()
         {
             InitializeComponent();
+
+            var viewModel = (CreateMenuViewModel)DataContext;
+            viewModel.RequestClose += (sender, e) => this.Close();
+            viewModel.MenuCreated += ViewModel_MenuCreated;
+        }
+
+        private void ViewModel_MenuCreated(object sender, EventArgs e)
+        {
+            // When a menu is created successfully, raise the MenuAdded event
+            MenuAdded?.Invoke(this, EventArgs.Empty);
         }
     }
 }

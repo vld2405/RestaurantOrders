@@ -214,12 +214,13 @@
                         <!-- Category Selection -->
                         <StackPanel Grid.Column="1" Margin="10,0,0,0">
                             <TextBlock Text="Category:" 
-                                       Style="{StaticResource LabelTextStyle}"/>
+                                  Style="{StaticResource LabelTextStyle}"/>
                             <ComboBox x:Name="CategoryComboBox"
-                                      ItemsSource="{Binding Categories}"
-                                      SelectedItem="{Binding SelectedCategory}"
-                                      DisplayMemberPath="Name"
-                                      Style="{StaticResource ComboBoxStyle}"/>
+                                  ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory}"
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  IsEnabled="False"/>   
                         </StackPanel>
                     </Grid>
 

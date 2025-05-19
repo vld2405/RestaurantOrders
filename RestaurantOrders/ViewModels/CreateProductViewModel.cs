@@ -34,8 +34,19 @@ namespace RestaurantOrders.ViewModels
         private ObservableCollection<AllergenViewModel> _availableAllergens = new ObservableCollection<AllergenViewModel>();
 
         private bool _isClosing = false;
+        private bool _canSubmit = false;
 
         #region getter-setter
+
+        public bool CanSubmit
+        {
+            get { return _canSubmit; }
+            set 
+            { 
+                _canSubmit = value; 
+                OnPropertyChanged(nameof(CanSubmit));
+            }
+        }
 
         public string Name
         {

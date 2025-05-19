@@ -164,8 +164,17 @@ namespace RestaurantOrders.ViewModels
         {
             CreateMenuWindow createMenuWindow = new CreateMenuWindow();
             createMenuWindow.Owner = Application.Current.MainWindow;
+
+            createMenuWindow.MenuAdded += CreateMenuWindow_MenuAdded;
+
             createMenuWindow.ShowDialog();
         }
+
+        private void CreateMenuWindow_MenuAdded(object sender, EventArgs e)
+        {
+            RefreshCategoriesAndProducts();
+        }
+
         private void DeleteProduct()
         {
 
