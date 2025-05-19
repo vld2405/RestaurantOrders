@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[AddMenu]
+CREATE OR ALTER PROCEDURE [dbo].[AddMenu]
     @Name NVARCHAR(100),
     @CategoryId INT, -- Category ID (should generally be 6 for Menu category)
     @ProductIds NVARCHAR(MAX), -- Comma-separated product IDs
@@ -80,10 +80,10 @@ BEGIN
                 SET @MenuDiscount = 10;
         END
         
-        -- Calculate price based on products with discount
+        -- Calculate price based on products with discount and weight ratio
         IF @Price IS NULL
         BEGIN
-            SELECT @CalculatedPrice = SUM(p.Price * qt.Quantity) * (1 - (@MenuDiscount / 100))
+            SELECT @CalculatedPrice = SUM(p.Price * (CAST(qt.Quantity AS DECIMAL(10,2)) / CAST(p.Quantity AS DECIMAL(10,2)))) * (1 - (@MenuDiscount / 100))
             FROM @ProductTable pt
             JOIN @QuantityTable qt ON pt.Position = qt.Position
             JOIN Products p ON pt.ProductId = p.Id;

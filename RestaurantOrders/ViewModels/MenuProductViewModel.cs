@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantOrders.ViewModels
 {
@@ -23,6 +19,7 @@ namespace RestaurantOrders.ViewModels
                     _product = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(TotalPrice));
+                    OnPropertyChanged(nameof(WeightRatio));
                 }
             }
         }
@@ -37,11 +34,18 @@ namespace RestaurantOrders.ViewModels
                     _quantity = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(TotalPrice));
+                    OnPropertyChanged(nameof(WeightRatio));
                 }
             }
         }
 
-        public decimal TotalPrice => Product?.Price * Quantity ?? 0m;
+        public decimal WeightRatio => Product?.Quantity > 0 ? (decimal)Quantity / Product.Quantity : 0m;
+
+        public decimal TotalPrice => Product != null ? Product.Price * WeightRatio : 0m;
+
+        public string WeightRatioText => Product?.Quantity > 0
+            ? $"{Quantity}g / {Product.Quantity}g = {WeightRatio:F2}"
+            : string.Empty;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

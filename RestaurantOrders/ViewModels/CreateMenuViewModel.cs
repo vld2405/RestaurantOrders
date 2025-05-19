@@ -20,20 +20,16 @@ namespace RestaurantOrders.ViewModels
         private readonly RestaurantDbContext _dbContext;
         private bool _isClosing = false;
 
-        // Menu properties
         private string _name = string.Empty;
         private CategoryViewModel _selectedCategory;
         private ObservableCollection<CategoryViewModel> _categories = new ObservableCollection<CategoryViewModel>();
 
-        // Product selection properties
         private ProductViewModel _selectedProduct;
         private ObservableCollection<ProductViewModel> _availableProducts = new ObservableCollection<ProductViewModel>();
         private int _productQuantity = 1;
 
-        // Menu products collection
         private ObservableCollection<MenuProductViewModel> _menuProducts = new ObservableCollection<MenuProductViewModel>();
 
-        // Price calculation properties
         private decimal _totalProductsPrice = 0.0m;
         private decimal _calculatedPrice = 0.0m;
         private int _discountPercentage = 10; // Default discount percentage
@@ -320,14 +316,15 @@ namespace RestaurantOrders.ViewModels
             if (existingProduct != null)
             {
                 // Update quantity if already exists
-                existingProduct.Quantity += ProductQuantity;
+                existingProduct.Quantity = ProductQuantity;
                 // Refresh UI binding
-                MenuProducts.Remove(existingProduct);
-                MenuProducts.Add(existingProduct);
+                int index = MenuProducts.IndexOf(existingProduct);
+                MenuProducts.RemoveAt(index);
+                MenuProducts.Insert(index, existingProduct);
             }
             else
             {
-                // Add new product to menu
+                // Add new product to menu with specified weight in grams
                 var menuProduct = new MenuProductViewModel
                 {
                     Product = SelectedProduct,
