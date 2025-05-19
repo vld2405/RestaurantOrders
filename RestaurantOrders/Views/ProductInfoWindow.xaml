@@ -1,0 +1,238 @@
+﻿<!-- ProductInfoWindow.xaml -->
+<Window x:Class="RestaurantOrders.Views.ProductInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RestaurantOrders.Views"
+        mc:Ignorable="d"
+        Title="Product Information" 
+        Height="400" 
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="White"
+        Icon="/Images/KETO.png">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <!-- Content Text Style -->
+        <Style x:Key="ContentTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <!-- Property Label Style -->
+        <Style x:Key="PropertyLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Property Value Style -->
+        <Style x:Key="PropertyValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Allergen Tag Style -->
+        <Style x:Key="AllergenTagStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFE0E0"/>
+            <Setter Property="BorderBrush" Value="#FF9090"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+        </Style>
+
+        <!-- Button Style -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#e69149"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#bf793d"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#996131"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border Padding="25" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Product Name Header -->
+            <TextBlock Text="{Binding Name}" 
+                       Style="{StaticResource HeaderStyle}"
+                       Grid.Row="0"/>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Basic Info -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Category -->
+                        <TextBlock Text="Category:" 
+                                   Style="{StaticResource PropertyLabelStyle}"
+                                   Grid.Row="0" Grid.Column="0"/>
+                        <TextBlock Text="{Binding CategoryName}" 
+                                   Style="{StaticResource PropertyValueStyle}"
+                                   Grid.Row="0" Grid.Column="1"/>
+
+                        <!-- Price -->
+                        <TextBlock Text="Price:" 
+                                   Style="{StaticResource PropertyLabelStyle}"
+                                   Grid.Row="1" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
+                                   Style="{StaticResource PropertyValueStyle}"
+                                   Foreground="#4CAF50"
+                                   FontWeight="Bold"
+                                   Grid.Row="1" Grid.Column="1"/>
+
+                        <!-- Portion -->
+                        <TextBlock Text="Portion:" 
+                                   Style="{StaticResource PropertyLabelStyle}"
+                                   Grid.Row="2" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Quantity, StringFormat={}{0}g}" 
+                                   Style="{StaticResource PropertyValueStyle}"
+                                   Grid.Row="2" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Menu Items (if this is a menu) -->
+                    <StackPanel Visibility="{Binding IsMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="Menu Items" 
+                                   Style="{StaticResource SectionHeaderStyle}"/>
+
+                        <ItemsControl ItemsSource="{Binding MenuItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="{Binding Name}" 
+                                                   Grid.Column="0"/>
+                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0}g}"
+                                                   Margin="10,0" 
+                                                   Grid.Column="1"/>
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}"
+                                                   Grid.Column="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border BorderBrush="#EEEEEE" 
+                                BorderThickness="0,1,0,0"
+                                Margin="0,10"/>
+                    </StackPanel>
+
+                    <!-- Allergens -->
+                    <TextBlock Text="Allergens" 
+                               Style="{StaticResource SectionHeaderStyle}"/>
+
+                    <TextBlock Text="This product contains the following allergens:" 
+                               Style="{StaticResource ContentTextStyle}"
+                               Visibility="{Binding HasAllergens, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                    <TextBlock Text="No allergens listed for this product." 
+                               Style="{StaticResource ContentTextStyle}"
+                               Visibility="{Binding HasNoAllergens, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                    <WrapPanel>
+                        <ItemsControl ItemsSource="{Binding Allergens}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource AllergenTagStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE711;" 
+                                                       FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14"
+                                                       Foreground="#D32F2F"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,5,0"/>
+                                            <TextBlock Text="{Binding Name}" 
+                                                       FontSize="14"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
+
+                    <!-- Additional Information section could be added here -->
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Button -->
+            <Button Content="Close" 
+                    Style="{StaticResource CloseButtonStyle}"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    Margin="0,15,0,0"
+                    Command="{Binding CommandClose}"/>
+        </Grid>
+    </Border>
+</Window>

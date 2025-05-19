@@ -56,6 +56,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -65,6 +66,37 @@
                                 BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" 
                                               VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="InfoButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#0078D7"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        CornerRadius="16"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -89,6 +121,7 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -123,6 +156,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -155,7 +189,7 @@
                                               VerticalAlignment="Center"/>
 
                                         <!-- Placeholder text -->
-                                        <TextBlock Text="Search menu items..." 
+                                        <TextBlock Text=" Search menu items..." 
                                            Margin="0,0,10,0"
                                            Foreground="LightGray" 
                                            VerticalAlignment="Center">
@@ -184,6 +218,7 @@
             <Setter Property="Background" Value="#572f0e"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Padding" Value="15,8"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -334,25 +369,40 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <!-- Added for menu items list -->
                                                         </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
 
-                                                        <TextBlock Text="{Binding Name}" 
-                                                               Style="{StaticResource ItemNameStyle}" 
-                                                               Grid.Row="0"/>
-                                                        <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
-                                                               Style="{StaticResource ItemPriceStyle}" 
-                                                               Grid.Row="1"/>
+                                                            <!-- Product name and price in first column -->
+                                                            <StackPanel Grid.Column="0">
+                                                                <TextBlock Text="{Binding Name}" 
+                                                                        Style="{StaticResource ItemNameStyle}"
+                                                                        TextWrapping="Wrap"/>
+                                                                <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
+                                                                        Style="{StaticResource ItemPriceStyle}"/>
+                                                            </StackPanel>
 
-                                                        <TextBlock Grid.Row="2" Margin="0,5,0,0">
+                                                            <!-- Info button in second column - fixed position -->
+                                                            <Button Grid.Column="1"
+                                                                    Content="&#xE946;" 
+                                                                    FontFamily="Segoe MDL2 Assets"
+                                                                    FontSize="16"
+                                                                    Style="{StaticResource InfoButtonStyle}"
+                                                                    VerticalAlignment="Top"
+                                                                    Command="{Binding CommandInfoButton}"
+                                                                    Margin="5,0,0,0"/>
+                                                        </Grid>
+                                                        <TextBlock Grid.Row="1" Margin="0,5,0,0">
                                                                 <Run Text="Portion: " FontStyle="Italic"/>
                                                                 <Run Text="{Binding Quantity}" FontWeight="SemiBold"/>
                                                                 <Run Text="g" FontWeight="SemiBold"/>
                                                         </TextBlock>
 
                                                         <!-- Show "Menu" badge for menu items -->
-                                                        <Border Grid.Row="3" 
+                                                        <Border Grid.Row="2" 
                                                                 Background="#4CAF50" 
                                                                 CornerRadius="4" 
                                                                 Padding="5,2" 
@@ -366,7 +416,7 @@
                                                         </Border>
 
                                                         <StackPanel Orientation="Horizontal" 
-                                                                    Grid.Row="4" 
+                                                                    Grid.Row="3" 
                                                                     Margin="0,10,0,0">
                                                             <Button Content="-" 
                                                                     Style="{StaticResource QuantityButtonStyle}"

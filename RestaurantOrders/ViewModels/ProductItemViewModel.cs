@@ -1,7 +1,9 @@
 ﻿using RestaurantOrders.Models;
+using RestaurantOrders.Views;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RestaurantOrders.ViewModels
@@ -106,12 +108,13 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandIncreaseQuantity { get; set; }
         public ICommand CommandDecreaseQuantity { get; set; }
         public ICommand CommandAddToCart { get; set; }
-
+        public ICommand CommandInfoButton { get; set; }
         public ProductItemViewModel()
         {
             CommandIncreaseQuantity = new RelayCommand(IncreaseQuantity);
             CommandDecreaseQuantity = new RelayCommand(DecreaseQuantity, CanDecreaseQuantity);
             CommandAddToCart = new RelayCommand(AddToCart, CanAddToCart);
+            CommandInfoButton = new RelayCommand(OpenInfo);
         }
 
         private void IncreaseQuantity()
@@ -135,7 +138,12 @@ namespace RestaurantOrders.ViewModels
                 AddedToCart?.Invoke(this, EventArgs.Empty);
             }
         }
-
+        private void OpenInfo()
+        {
+            ProductInfoWindow productInfoWindow = new ProductInfoWindow();
+            productInfoWindow.Owner = Application.Current.MainWindow;
+            productInfoWindow.ShowDialog();
+        }
         private bool CanAddToCart() => Quantity > 0;
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -565,5 +565,4 @@ namespace RestaurantOrders.ViewModels
 }
 
 // TODO: sa fac logica pentru ultimele 6 butoane
-// TODO: sa bag searchbar functionabil
 // TODO: sa bag butoane pentru alergeni pentru fiecare produs
