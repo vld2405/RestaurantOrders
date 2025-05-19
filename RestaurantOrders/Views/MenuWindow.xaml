@@ -118,7 +118,6 @@
 
         <Style x:Key="SearchBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="36"/>
-            <Setter Property="Padding" Value="30,8,10,8"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -127,26 +126,54 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="18"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <Grid>
-                                <TextBlock Text="&#x1F50D;" 
-                                           FontSize="16" 
-                                           Margin="10,0,0,0" 
-                                           VerticalAlignment="Center"
-                                           Foreground="#999999"/>
-                                <ScrollViewer x:Name="PART_ContentHost" 
-                                              Margin="{TemplateBinding Padding}" 
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                            CornerRadius="18"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+
+                                <!-- This grid contains both the search icon and input box -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Search icon in its own column -->
+                                    <TextBlock Grid.Column="0"
+                                       Text="&#x1F50D;" 
+                                       FontSize="16" 
+                                       Margin="12,0,5,0" 
+                                       VerticalAlignment="Center"
+                                       Foreground="#999999"/>
+
+                                    <!-- Content area for typing in second column -->
+                                    <Grid Grid.Column="1">
+                                        <!-- Actual text input area -->
+                                        <ScrollViewer x:Name="PART_ContentHost" 
+                                              Margin="0,0,10,0"
                                               VerticalAlignment="Center"/>
-                                <TextBlock Text="Search menu items..." 
-                                           Margin="{TemplateBinding Padding}" 
+
+                                        <!-- Placeholder text -->
+                                        <TextBlock Text="Search menu items..." 
+                                           Margin="0,0,10,0"
                                            Foreground="LightGray" 
-                                           VerticalAlignment="Center"/>
-                                <!--Visibility="{Binding Text.IsEmpty, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}" -->
-                            </Grid>
-                        </Border>
+                                           VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text.Length, RelativeSource={RelativeSource AncestorType=TextBox}}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -279,12 +306,12 @@
                 <!-- Search Bar -->
                 <Grid Margin="0,0,0,20">
                     <TextBox x:Name="SearchBox" 
-                             Style="{StaticResource SearchBoxStyle}"/>
-                    <!-- TextChanged="SearchBox_TextChanged" -->
+                             Style="{StaticResource SearchBoxStyle}"
+                             Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
                 <!-- Menu -->
-                <ItemsControl ItemsSource="{Binding CategoriesWithProducts}">
+                <ItemsControl ItemsSource="{Binding FilteredCategoriesWithProducts}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>

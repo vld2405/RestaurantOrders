@@ -35,6 +35,7 @@ namespace RestaurantOrders.ViewModels
             CommandPlaceOrder = new RelayCommand(PlaceOrder, CanPlaceOrder);
 
             CategoriesWithProducts = new ObservableCollection<CategoryWithProducts>();
+            FilteredCategoriesWithProducts = CategoriesWithProducts; // Initialize with full list
             CartItems = new ObservableCollection<ProductItemViewModel>();
 
             LoadCategoriesAndProducts();
@@ -63,6 +64,8 @@ namespace RestaurantOrders.ViewModels
         private ObservableCollection<CategoryWithProducts> _categoriesWithProducts;
         private decimal _cartTotal;
         private ObservableCollection<ProductItemViewModel> _cartItems;
+        private string _searchTerm = string.Empty;
+        private ObservableCollection<CategoryWithProducts> _filteredCategoriesWithProducts;
 
         private User _currentUser;
 
@@ -85,6 +88,30 @@ namespace RestaurantOrders.ViewModels
             {
                 _categoriesWithProducts = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<CategoryWithProducts> FilteredCategoriesWithProducts
+        {
+            get => _filteredCategoriesWithProducts;
+            set
+            {
+                _filteredCategoriesWithProducts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SearchTerm
+        {
+            get => _searchTerm;
+            set
+            {
+                if (_searchTerm != value)
+                {
+                    _searchTerm = value;
+                    OnPropertyChanged();
+                    FilterProducts();
+                }
             }
         }
 
@@ -354,6 +381,40 @@ namespace RestaurantOrders.ViewModels
 
         #endregion
 
+        #region Search Functionality
+
+        // Filter products based on search term
+        private void FilterProducts()
+        {
+            if (string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                FilteredCategoriesWithProducts = CategoriesWithProducts;
+                return;
+            }
+
+            var filtered = new ObservableCollection<CategoryWithProducts>();
+
+            foreach (var category in CategoriesWithProducts)
+            {
+                var filteredProducts = new ObservableCollection<ProductItemViewModel>(
+                    category.Products.Where(p => p.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+                );
+
+                if (filteredProducts.Any())
+                {
+                    filtered.Add(new CategoryWithProducts
+                    {
+                        Category = category.Category,
+                        Products = filteredProducts
+                    });
+                }
+            }
+
+            FilteredCategoriesWithProducts = filtered;
+        }
+
+        #endregion
+
         // Public method to refresh the categories and products
         public void RefreshCategoriesAndProducts()
         {
@@ -379,6 +440,9 @@ namespace RestaurantOrders.ViewModels
 
             // Reload all categories and products
             LoadCategoriesAndProducts();
+
+            // Apply current search filter
+            FilterProducts();
         }
 
         private void LoadCategoriesAndProducts()
@@ -499,3 +563,7 @@ namespace RestaurantOrders.ViewModels
         #endregion
     }
 }
+
+// TODO: sa fac logica pentru ultimele 6 butoane
+// TODO: sa bag searchbar functionabil
+// TODO: sa bag butoane pentru alergeni pentru fiecare produs

@@ -18,6 +18,12 @@ namespace RestaurantOrders.Helper
                 int compareValue = int.Parse(param);
                 return count == compareValue ? Visibility.Visible : Visibility.Collapsed;
             }
+            else if (value is string text && parameter is string stringParam)
+            {
+                // For TextBox.Text.Length (string length)
+                int compareValue = int.Parse(stringParam);
+                return text.Length == compareValue ? Visibility.Visible : Visibility.Collapsed;
+            }
             return Visibility.Collapsed;
         }
 
