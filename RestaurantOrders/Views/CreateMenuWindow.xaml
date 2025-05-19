@@ -361,8 +361,7 @@
                         <Button Content="Create Menu" 
                                 Command="{Binding CommandSubmit}"
                                 Style="{StaticResource SubmitButtonStyle}"
-                                Width="120"
-                                IsEnabled="{Binding CanSubmit}"/>
+                                Width="120"/>
                         <Button Content="Cancel" 
                                 Command="{Binding CommandCancel}"
                                 Style="{StaticResource CancelButtonStyle}"/>

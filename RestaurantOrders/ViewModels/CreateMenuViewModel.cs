@@ -202,7 +202,6 @@ namespace RestaurantOrders.ViewModels
         }
 
         public bool CanSubmit => !string.IsNullOrWhiteSpace(Name) &&
-                                SelectedCategory != null &&
                                 MenuProducts.Count > 0;
 
         #endregion
@@ -212,7 +211,6 @@ namespace RestaurantOrders.ViewModels
         private bool CanSubmitMenu()
         {
             return !string.IsNullOrWhiteSpace(Name) &&
-                   SelectedCategory != null &&
                    MenuProducts.Count > 0;
         }
 
@@ -292,7 +290,7 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -316,15 +314,14 @@ namespace RestaurantOrders.ViewModels
             if (existingProduct != null)
             {
                 // Update quantity if already exists
-                existingProduct.Quantity = ProductQuantity;
+                existingProduct.Quantity += ProductQuantity;
                 // Refresh UI binding
-                int index = MenuProducts.IndexOf(existingProduct);
-                MenuProducts.RemoveAt(index);
-                MenuProducts.Insert(index, existingProduct);
+                MenuProducts.Remove(existingProduct);
+                MenuProducts.Add(existingProduct);
             }
             else
             {
-                // Add new product to menu with specified weight in grams
+                // Add new product to menu
                 var menuProduct = new MenuProductViewModel
                 {
                     Product = SelectedProduct,
@@ -414,8 +411,8 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //if (!_isClosing)
+                    //MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -461,8 +458,8 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //if (!_isClosing)
+                    //MessageBox.Show($"Failed to load products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

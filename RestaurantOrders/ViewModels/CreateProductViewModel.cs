@@ -224,7 +224,7 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -291,8 +291,8 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //if (!_isClosing)
+                    //MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -330,8 +330,8 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load allergens: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //if (!_isClosing)
+                    //MessageBox.Show($"Failed to load allergens: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
