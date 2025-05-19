@@ -301,10 +301,12 @@ namespace RestaurantOrders.ViewModels
                         }
                     }
 
-                    // Load products for each category
+                    // For each category, load products
                     foreach (var category in categories)
                     {
                         var productsInCategory = new List<ProductItemViewModel>();
+
+                        // Load regular products
                         using (var command = new SqlCommand("SELECT Id, Name, Quantity, Price FROM Products WHERE CategoryId = @CategoryId", connection))
                         {
                             command.Parameters.AddWithValue("@CategoryId", category.Id);
@@ -318,13 +320,47 @@ namespace RestaurantOrders.ViewModels
                                         Name = reader.GetString(reader.GetOrdinal("Name")),
                                         Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                                         Price = reader.GetDecimal(reader.GetOrdinal("Price")),
-                                        CategoryId = category.Id
+                                        CategoryId = category.Id,
+                                        IsMenu = false
                                     };
 
-                                    // Subscribe to the AddedToCart event
                                     product.AddedToCart += Product_AddedToCart;
-
                                     productsInCategory.Add(product);
+                                }
+                            }
+                        }
+
+                        // If this is the Menu category (usually ID 6 based on your seed data)
+                        if (category.Name == "Menu")
+                        {
+                            // Load menus as products for display
+                            using (var command = new SqlCommand(@"
+                        SELECT m.Id, m.Name, m.Price, m.CategoryId, 
+                               SUM(md.Quantity) as TotalWeight
+                        FROM Menus m
+                        JOIN MenuDetails md ON m.Id = md.MenuId
+                        WHERE m.CategoryId = @CategoryId
+                        GROUP BY m.Id, m.Name, m.Price, m.CategoryId", connection))
+                            {
+                                command.Parameters.AddWithValue("@CategoryId", category.Id);
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        var menuProduct = new ProductItemViewModel
+                                        {
+                                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                                            Price = reader.GetDecimal(reader.GetOrdinal("Price")),
+                                            // Use the calculated total weight from all menu items
+                                            Quantity = reader.GetInt32(reader.GetOrdinal("TotalWeight")),
+                                            CategoryId = category.Id,
+                                            IsMenu = true  // Add this flag to indicate it's a menu
+                                        };
+
+                                        menuProduct.AddedToCart += Product_AddedToCart;
+                                        productsInCategory.Add(menuProduct);
+                                    }
                                 }
                             }
                         }

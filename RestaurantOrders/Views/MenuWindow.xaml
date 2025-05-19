@@ -307,28 +307,46 @@
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
                                                             <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <!-- Added for menu items list -->
                                                         </Grid.RowDefinitions>
 
                                                         <TextBlock Text="{Binding Name}" 
-                                                                   Style="{StaticResource ItemNameStyle}" 
-                                                                   Grid.Row="0"/>
+                                                               Style="{StaticResource ItemNameStyle}" 
+                                                               Grid.Row="0"/>
                                                         <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
-                                                                   Style="{StaticResource ItemPriceStyle}" 
-                                                                   Grid.Row="1"/>
+                                                               Style="{StaticResource ItemPriceStyle}" 
+                                                               Grid.Row="1"/>
 
                                                         <TextBlock Grid.Row="2" Margin="0,5,0,0">
-                                                            <Run Text="Portion: " FontStyle="Italic"/>
-                                                            <Run Text="{Binding Quantity}" FontWeight="SemiBold"/>
-                                                            <Run Text="g" FontWeight="SemiBold"/>
+                                                                <Run Text="Portion: " FontStyle="Italic"/>
+                                                                <Run Text="{Binding Quantity}" FontWeight="SemiBold"/>
+                                                                <Run Text="g" FontWeight="SemiBold"/>
                                                         </TextBlock>
 
-                                                        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,10,0,0">
+                                                        <!-- Show "Menu" badge for menu items -->
+                                                        <Border Grid.Row="3" 
+                                                                Background="#4CAF50" 
+                                                                CornerRadius="4" 
+                                                                Padding="5,2" 
+                                                                Margin="0,5,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                Visibility="{Binding IsMenu, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <TextBlock Text="MENU" 
+                                                                   Foreground="White" 
+                                                                   FontSize="10" 
+                                                                   FontWeight="Bold"/>
+                                                        </Border>
+
+                                                        <StackPanel Orientation="Horizontal" 
+                                                                    Grid.Row="4" 
+                                                                    Margin="0,10,0,0">
                                                             <Button Content="-" 
                                                                     Style="{StaticResource QuantityButtonStyle}"
                                                                     Command="{Binding CommandDecreaseQuantity}"
                                                                     IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                                             <TextBlock Text="{Binding TempQuantity}" 
-                                                                       Style="{StaticResource QuantityTextStyle}"/>
+                                                                    Style="{StaticResource QuantityTextStyle}"/>
                                                             <Button Content="+" 
                                                                     Style="{StaticResource QuantityButtonStyle}"
                                                                     Command="{Binding CommandIncreaseQuantity}"

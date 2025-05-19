@@ -15,7 +15,17 @@ namespace RestaurantOrders.ViewModels
         private int _categoryId;
         private int _orderQuantity = 0;
         private int _tempQuantity = 0; // Temporary quantity for display before adding to cart
+        private bool _isMenu;
 
+        public bool IsMenu
+        {
+            get => _isMenu;
+            set
+            {
+                _isMenu = value;
+                OnPropertyChanged();
+            }
+        }
         public int Id
         {
             get => _id;

@@ -35,8 +35,23 @@ namespace RestaurantOrders.Views
                 e.Handled = true;
             }
         }
+        private void AddMenu()
+        {
+            CreateMenuWindow createMenuWindow = new CreateMenuWindow();
+            createMenuWindow.Owner = this;
 
-        // This method can be called to refresh the menu data
+            // Add this line to subscribe to the MenuAdded event
+            createMenuWindow.MenuAdded += CreateMenuWindow_MenuAdded;
+
+            createMenuWindow.ShowDialog();
+        }
+
+        // Add this event handler method to MenuWindow.xaml.cs
+        private void CreateMenuWindow_MenuAdded(object sender, EventArgs e)
+        {
+            // Refresh the menu data
+            RefreshMenu();
+        }
         public void RefreshMenu()
         {
             if (_viewModel != null)
