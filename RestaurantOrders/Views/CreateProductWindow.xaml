@@ -145,7 +145,7 @@
                              Style="{StaticResource NumericTextBoxStyle}"/>
 
                     <!-- Quantity -->
-                    <TextBlock Text="Quantity:" 
+                    <TextBlock Text="Portion (grams):" 
                                Style="{StaticResource LabelTextStyle}"/>
                     <TextBox x:Name="QuantityTextBox" 
                              Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
