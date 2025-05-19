@@ -139,8 +139,19 @@ namespace RestaurantOrders.ViewModels
         {
             CreateProductWindow createProductWindow = new CreateProductWindow();
             createProductWindow.Owner = Application.Current.MainWindow;
+
+            // Subscribe to the ProductAdded event to refresh the menu when a product is added
+            createProductWindow.ProductAdded += CreateProductWindow_ProductAdded;
+
             createProductWindow.ShowDialog();
         }
+
+        private void CreateProductWindow_ProductAdded(object sender, EventArgs e)
+        {
+            // Refresh the menu when a product is added
+            RefreshCategoriesAndProducts();
+        }
+
         private void AddAllergen()
         {
             CreateAllergenWindow createAllergenWindow = new CreateAllergenWindow();
@@ -220,6 +231,33 @@ namespace RestaurantOrders.ViewModels
 
         #endregion
 
+        // Public method to refresh the categories and products
+        public void RefreshCategoriesAndProducts()
+        {
+            // Clear existing event handlers to prevent memory leaks
+            if (CategoriesWithProducts != null)
+            {
+                foreach (var category in CategoriesWithProducts)
+                {
+                    if (category.Products != null)
+                    {
+                        foreach (var product in category.Products)
+                        {
+                            product.AddedToCart -= Product_AddedToCart;
+                        }
+                    }
+                }
+            }
+
+            // Clear existing collections
+            CategoriesWithProducts.Clear();
+            CartItems.Clear();
+            CartTotal = 0;
+
+            // Reload all categories and products
+            LoadCategoriesAndProducts();
+        }
+
         private void LoadCategoriesAndProducts()
         {
             try
@@ -266,7 +304,7 @@ namespace RestaurantOrders.ViewModels
                                         CategoryId = category.Id
                                     };
 
-                                    // Subscribe to the AddedToCart event instead of PropertyChanged
+                                    // Subscribe to the AddedToCart event
                                     product.AddedToCart += Product_AddedToCart;
 
                                     productsInCategory.Add(product);
@@ -290,7 +328,6 @@ namespace RestaurantOrders.ViewModels
                 MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
 
         #region Property Changed
 

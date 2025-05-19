@@ -23,22 +23,36 @@ namespace RestaurantOrders.Views
     /// </summary>
     public partial class CreateProductWindow : Window
     {
+        public event EventHandler ProductAdded;
+
         public CreateProductWindow()
         {
+            if (AppConfig.ConnectionStrings?.RestaurantOrdersDatabase == null)
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .Build();
+
+                AppConfig.Init(configuration);
+            }
+
             InitializeComponent();
 
-            //if (AppConfig.ConnectionStrings?.RestaurantOrdersDatabase == null)
-            //{
-            //    var configuration = new ConfigurationBuilder()
-            //        .SetBasePath(Directory.GetCurrentDirectory())
-            //        .AddJsonFile("appsettings.json", optional: false)
-            //        .Build();
-
-            //    AppConfig.Init(configuration);
-            //}
-
             var viewModel = (CreateProductViewModel)DataContext;
-            viewModel.RequestClose += (sender, e) => this.Close();
+            viewModel.RequestClose += ViewModel_RequestClose;
+            viewModel.ProductCreated += ViewModel_ProductCreated;
+        }
+
+        private void ViewModel_RequestClose(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ViewModel_ProductCreated(object sender, EventArgs e)
+        {
+            // When a product is created successfully, raise the ProductAdded event
+            ProductAdded?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace RestaurantOrders.ViewModels
 
         #region getter-setter
 
-        public string Name 
+        public string Name
         {
             get => _name;
 
@@ -119,6 +119,13 @@ namespace RestaurantOrders.ViewModels
 
         #endregion
 
+        #region Events
+        // Event that signals a product was successfully created
+        public event EventHandler ProductCreated;
+        // Event that signals the window should close
+        public event EventHandler RequestClose;
+        #endregion
+
         #region Command-Methods
         private void SubmitButton()
         {
@@ -188,6 +195,10 @@ namespace RestaurantOrders.ViewModels
                                 if (productId > 0)
                                 {
                                     MessageBox.Show("Product added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                    // Raise the ProductCreated event to signal success
+                                    ProductCreated?.Invoke(this, EventArgs.Empty);
+
                                     ClearForm();
                                     OnRequestClose();
                                 }
@@ -225,8 +236,6 @@ namespace RestaurantOrders.ViewModels
         }
 
         #endregion
-
-        public event EventHandler? RequestClose;
 
         protected virtual void OnRequestClose()
         {
