@@ -17,7 +17,7 @@ namespace RestaurantOrders.ViewModels
         private int _categoryId;
         private string _categoryName;
         private int _orderQuantity = 0;
-        private int _tempQuantity = 0; // Temporary quantity for display before adding to cart
+        private int _tempQuantity = 0;
         private bool _isMenu;
 
         public bool IsMenu
@@ -100,7 +100,6 @@ namespace RestaurantOrders.ViewModels
             }
         }
 
-        // This property is bound to the UI for display
         public int TempQuantity
         {
             get => _tempQuantity;
@@ -113,7 +112,6 @@ namespace RestaurantOrders.ViewModels
 
         public bool IsInCart => OrderQuantity > 0;
 
-        // Event for when the product is added to cart
         public event EventHandler<EventArgs> AddedToCart;
 
         public ICommand CommandIncreaseQuantity { get; set; }

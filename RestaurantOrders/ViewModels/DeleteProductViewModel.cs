@@ -170,7 +170,6 @@ namespace RestaurantOrders.ViewModels
             if (SelectedProduct == null)
                 return;
 
-            // Confirm deletion
             if (MessageBox.Show($"Are you sure you want to delete the product '{SelectedProduct.Name}'?",
                                "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
             {
@@ -201,10 +200,8 @@ namespace RestaurantOrders.ViewModels
                                 {
                                     MessageBox.Show(message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Raise the ProductDeleted event
                                     ProductDeleted?.Invoke(this, EventArgs.Empty);
 
-                                    // Close the window
                                     OnRequestClose();
                                 }
                                 else
@@ -218,7 +215,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -249,10 +245,8 @@ namespace RestaurantOrders.ViewModels
             {
                 Categories.Clear();
 
-                // Add "All Categories" option
                 Categories.Add(new CategoryViewModel { Id = -1, Name = "All Categories" });
 
-                // Add categories from database
                 using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
                 {
                     connection.Open();
@@ -277,13 +271,10 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Select "All Categories" by default
                 SelectedCategory = Categories.FirstOrDefault();
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -300,7 +291,6 @@ namespace RestaurantOrders.ViewModels
                 {
                     connection.Open();
 
-                    // Get all products
                     using (var command = new SqlCommand(@"
                         SELECT p.Id, p.Name, p.Price, p.Quantity, p.CategoryId, c.Name as CategoryName 
                         FROM Products p
@@ -332,8 +322,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -349,30 +337,25 @@ namespace RestaurantOrders.ViewModels
 
                 var query = Products.AsEnumerable();
 
-                // Apply search term filter
                 if (!string.IsNullOrWhiteSpace(SearchTerm))
                 {
                     query = query.Where(p => p.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
                 }
 
-                // Apply category filter
                 if (SelectedCategory != null && SelectedCategory.Id != -1)
                 {
                     query = query.Where(p => p.CategoryId == SelectedCategory.Id);
                 }
 
-                // Add filtered products to collection
                 foreach (var product in query)
                 {
                     FilteredProducts.Add(product);
                 }
 
-                // Update empty state flag
                 IsEmptyState = FilteredProducts.Count == 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error filtering products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

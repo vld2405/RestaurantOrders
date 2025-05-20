@@ -202,7 +202,6 @@ namespace RestaurantOrders.ViewModels
             {
                 connection.Open();
 
-                // Load basic product information
                 using (var command = new SqlCommand(@"
                     SELECT p.Id, p.Name, p.Price, p.Quantity, p.CategoryId, c.Name AS CategoryName 
                     FROM Products p
@@ -225,7 +224,6 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Load allergens for this product
                 LoadProductAllergens(connection);
             }
         }
@@ -236,7 +234,6 @@ namespace RestaurantOrders.ViewModels
             {
                 connection.Open();
 
-                // Load basic menu information
                 using (var command = new SqlCommand(@"
                     SELECT m.Id, m.Name, m.Price, m.CategoryId, c.Name AS CategoryName, 
                            SUM(md.Quantity) AS TotalWeight
@@ -262,10 +259,8 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Load menu items
                 LoadMenuItems(connection);
 
-                // Load all allergens from products in this menu
                 LoadMenuAllergens(connection);
             }
         }
@@ -321,7 +316,6 @@ namespace RestaurantOrders.ViewModels
                 }
             }
 
-            // Trigger property changed for dependent properties
             OnPropertyChanged(nameof(HasAllergens));
             OnPropertyChanged(nameof(HasNoAllergens));
         }
@@ -330,7 +324,6 @@ namespace RestaurantOrders.ViewModels
         {
             Allergens.Clear();
 
-            // Get unique allergens from all products in the menu
             using (var command = new SqlCommand("GetAllergensByMenuId", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
@@ -349,7 +342,6 @@ namespace RestaurantOrders.ViewModels
                 }
             }
 
-            // Trigger property changed for dependent properties
             OnPropertyChanged(nameof(HasAllergens));
             OnPropertyChanged(nameof(HasNoAllergens));
         }

@@ -150,8 +150,12 @@
                     <TextBox x:Name="QuantityTextBox" 
                              Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource NumericTextBoxStyle}"/>
+                    <TextBlock Text="Restaurant Stock (grams):" 
+                             Style="{StaticResource LabelTextStyle}"/>
+                    <TextBox x:Name="RestaurantStockTextBox" 
+                             Text="{Binding RestaurantStock, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource NumericTextBoxStyle}"/> 
 
-                    <!-- Allergens Section -->
                     <!-- Allergens Section -->
                     <TextBlock Text="Allergens:" 
            Style="{StaticResource LabelTextStyle}"/>

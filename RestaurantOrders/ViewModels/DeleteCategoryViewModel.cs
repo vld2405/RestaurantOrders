@@ -140,7 +140,6 @@ namespace RestaurantOrders.ViewModels
             if (SelectedCategory == null)
                 return;
 
-            // Check if category has associated products or menus
             if (SelectedCategory.ProductCount > 0 || SelectedCategory.MenuCount > 0)
             {
                 string message = "This category cannot be deleted because it is in use:\n";
@@ -154,7 +153,6 @@ namespace RestaurantOrders.ViewModels
                 return;
             }
 
-            // Confirm deletion
             if (MessageBox.Show($"Are you sure you want to delete the category '{SelectedCategory.Name}'?",
                                "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
             {
@@ -185,10 +183,8 @@ namespace RestaurantOrders.ViewModels
                                 {
                                     MessageBox.Show(message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Raise the CategoryDeleted event
                                     CategoryDeleted?.Invoke(this, EventArgs.Empty);
 
-                                    // Close the window
                                     OnRequestClose();
                                 }
                                 else
@@ -280,19 +276,16 @@ namespace RestaurantOrders.ViewModels
 
                 var query = Categories.AsEnumerable();
 
-                // Apply search term filter
                 if (!string.IsNullOrWhiteSpace(SearchTerm))
                 {
                     query = query.Where(c => c.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
                 }
 
-                // Add filtered categories to collection
                 foreach (var category in query)
                 {
                     FilteredCategories.Add(category);
                 }
 
-                // Update empty state flag
                 IsEmptyState = FilteredCategories.Count == 0;
             }
             catch (Exception ex)
@@ -336,7 +329,6 @@ namespace RestaurantOrders.ViewModels
         #endregion
     }
 
-    // Create a new ViewModel for category with count information
     public class CategoryWithCountViewModel : INotifyPropertyChanged
     {
         private int _id;

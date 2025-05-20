@@ -140,7 +140,6 @@ namespace RestaurantOrders.ViewModels
             if (SelectedAllergen == null)
                 return;
 
-            // Confirm deletion
             if (MessageBox.Show($"Are you sure you want to delete the allergen '{SelectedAllergen.Name}'?",
                                "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
             {
@@ -171,10 +170,8 @@ namespace RestaurantOrders.ViewModels
                                 {
                                     MessageBox.Show(message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Raise the AllergenDeleted event
                                     AllergenDeleted?.Invoke(this, EventArgs.Empty);
 
-                                    // Close the window
                                     OnRequestClose();
                                 }
                                 else
@@ -188,7 +185,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -247,8 +243,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                if (!_isClosing)
-                    MessageBox.Show($"Failed to load allergens: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -264,24 +258,20 @@ namespace RestaurantOrders.ViewModels
 
                 var query = Allergens.AsEnumerable();
 
-                // Apply search term filter
                 if (!string.IsNullOrWhiteSpace(SearchTerm))
                 {
                     query = query.Where(a => a.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
                 }
 
-                // Add filtered allergens to collection
                 foreach (var allergen in query)
                 {
                     FilteredAllergens.Add(allergen);
                 }
 
-                // Update empty state flag
                 IsEmptyState = FilteredAllergens.Count == 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error filtering allergens: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

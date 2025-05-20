@@ -16,11 +16,9 @@ namespace RestaurantOrders.Views
         {
             InitializeComponent();
 
-            // Initialize the view model with the current user
             _viewModel = new ViewMyOrdersViewModel(user);
             DataContext = _viewModel;
 
-            // Subscribe to the RequestClose event
             _viewModel.RequestClose += (sender, e) => Close();
         }
     }

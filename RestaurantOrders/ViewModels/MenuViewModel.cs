@@ -39,7 +39,7 @@ namespace RestaurantOrders.ViewModels
 
 
             CategoriesWithProducts = new ObservableCollection<CategoryWithProducts>();
-            FilteredCategoriesWithProducts = CategoriesWithProducts; // Initialize with full list
+            FilteredCategoriesWithProducts = CategoriesWithProducts;
             CartItems = new ObservableCollection<ProductItemViewModel>();
 
             LoadCategoriesAndProducts();
@@ -203,7 +203,6 @@ namespace RestaurantOrders.ViewModels
             CreateProductWindow createProductWindow = new CreateProductWindow();
             createProductWindow.Owner = Application.Current.MainWindow;
 
-            // Subscribe to the ProductAdded event to refresh the menu when a product is added
             createProductWindow.ProductAdded += CreateProductWindow_ProductAdded;
 
             createProductWindow.ShowDialog();
@@ -211,7 +210,6 @@ namespace RestaurantOrders.ViewModels
 
         private void CreateProductWindow_ProductAdded(object sender, EventArgs e)
         {
-            // Refresh the menu when a product is added
             RefreshCategoriesAndProducts();
         }
 
@@ -241,7 +239,6 @@ namespace RestaurantOrders.ViewModels
             DeleteProductWindow deleteProductWindow = new DeleteProductWindow();
             deleteProductWindow.Owner = Application.Current.MainWindow;
 
-            // Subscribe to the ProductDeleted event to refresh the menu when a product is deleted
             deleteProductWindow.ProductDeleted += DeleteProductWindow_ProductDeleted;
 
             deleteProductWindow.ShowDialog();
@@ -249,7 +246,6 @@ namespace RestaurantOrders.ViewModels
 
         private void DeleteProductWindow_ProductDeleted(object sender, EventArgs e)
         {
-            // Refresh the menu when a product is deleted
             RefreshCategoriesAndProducts();
         }
         private void DeleteAllergen()
@@ -257,7 +253,6 @@ namespace RestaurantOrders.ViewModels
             DeleteAllergenWindow deleteAllergenWindow = new DeleteAllergenWindow();
             deleteAllergenWindow.Owner = Application.Current.MainWindow;
 
-            // Subscribe to the AllergenDeleted event to refresh the menu if needed
             deleteAllergenWindow.AllergenDeleted += DeleteAllergenWindow_AllergenDeleted;
 
             deleteAllergenWindow.ShowDialog();
@@ -265,7 +260,6 @@ namespace RestaurantOrders.ViewModels
 
         private void DeleteAllergenWindow_AllergenDeleted(object sender, EventArgs e)
         {
-            // In case an allergen that's used in any loaded product is deleted, refresh the menu
             RefreshCategoriesAndProducts();
         }
         private void DeleteCategory()
@@ -273,7 +267,6 @@ namespace RestaurantOrders.ViewModels
             DeleteCategoryWindow deleteCategoryWindow = new DeleteCategoryWindow();
             deleteCategoryWindow.Owner = Application.Current.MainWindow;
 
-            // Subscribe to the CategoryDeleted event to refresh the menu when a category is deleted
             deleteCategoryWindow.CategoryDeleted += DeleteCategoryWindow_CategoryDeleted;
 
             deleteCategoryWindow.ShowDialog();
@@ -281,7 +274,6 @@ namespace RestaurantOrders.ViewModels
 
         private void DeleteCategoryWindow_CategoryDeleted(object sender, EventArgs e)
         {
-            // Refresh the menu when a category is deleted
             RefreshCategoriesAndProducts();
         }
         private void DeleteMenu()
@@ -289,7 +281,6 @@ namespace RestaurantOrders.ViewModels
             DeleteMenuWindow deleteMenuWindow = new DeleteMenuWindow();
             deleteMenuWindow.Owner = Application.Current.MainWindow;
 
-            // Subscribe to the MenuDeleted event to refresh the menu when a menu is deleted
             deleteMenuWindow.MenuDeleted += DeleteMenuWindow_MenuDeleted;
 
             deleteMenuWindow.ShowDialog();
@@ -297,7 +288,6 @@ namespace RestaurantOrders.ViewModels
 
         private void DeleteMenuWindow_MenuDeleted(object sender, EventArgs e)
         {
-            // Refresh the menu when a menu is deleted
             RefreshCategoriesAndProducts();
         }
         private void ViewOrders()
@@ -327,7 +317,6 @@ namespace RestaurantOrders.ViewModels
             createCategoryWindow.ShowDialog();
         }
 
-        // Event handler for when a product is added to cart
         private void Product_AddedToCart(object sender, EventArgs e)
         {
             UpdateCart();
@@ -335,7 +324,6 @@ namespace RestaurantOrders.ViewModels
 
         private void UpdateCart()
         {
-            // Update cart items
             CartItems.Clear();
             foreach (var category in CategoriesWithProducts)
             {
@@ -348,10 +336,8 @@ namespace RestaurantOrders.ViewModels
                 }
             }
 
-            // Calculate total
             CartTotal = CartItems.Sum(p => p.Price * p.OrderQuantity);
 
-            // Update commands
             CommandManager.InvalidateRequerySuggested();
         }
 
@@ -364,19 +350,16 @@ namespace RestaurantOrders.ViewModels
         {
             try
             {
-                // Check if there are items in the cart
                 if (!CartItems.Any())
                 {
                     MessageBox.Show("Your cart is empty. Please add items to your order.", "Empty Cart", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
-                // Create lists to store products and menus separately
                 List<int> productIds = new List<int>();
                 List<int> menuIds = new List<int>();
                 List<int> quantities = new List<int>();
 
-                // Separate products and menus for the SQL procedure
                 foreach (var item in CartItems)
                 {
                     if (item.IsMenu)
@@ -391,7 +374,6 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Convert to comma-separated strings for SQL
                 string productIdsStr = string.Join(",", productIds);
                 string menuIdsStr = string.Join(",", menuIds);
                 string quantitiesStr = string.Join(",", quantities);
@@ -404,10 +386,8 @@ namespace RestaurantOrders.ViewModels
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Check if using a logged-in user or anonymous user
-                        int userId = 1; // Default to user ID 1 for anonymous or testing
+                        int userId = 1;
 
-                        // Get actual user ID if available
                         if (CurrentUser != null && CurrentUser.Id > 0)
                         {
                             userId = CurrentUser.Id;
@@ -417,7 +397,6 @@ namespace RestaurantOrders.ViewModels
                         command.Parameters.AddWithValue("@OrderState", (int)OrderState.Registered);
                         command.Parameters.AddWithValue("@ProductIds", productIdsStr);
 
-                        // Only add MenuIds parameter if there are menus in the order
                         if (menuIds.Count > 0)
                             command.Parameters.AddWithValue("@MenuIds", menuIdsStr);
                         else
@@ -434,16 +413,13 @@ namespace RestaurantOrders.ViewModels
 
                                 if (orderId > 0)
                                 {
-                                    // Get the estimated delivery time from the result
                                     DateTime estimatedDelivery = reader.GetDateTime(reader.GetOrdinal("EstimatedDeliveryTime"));
 
-                                    // Format the time for display
                                     string deliveryTimeStr = estimatedDelivery.ToString("hh:mm tt");
 
                                     MessageBox.Show($"Your order #{orderId} has been placed successfully!\n\nEstimated delivery time: {deliveryTimeStr}",
                                         "Order Placed", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Reset cart
                                     foreach (var product in CartItems)
                                     {
                                         product.OrderQuantity = 0;
@@ -463,7 +439,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -471,7 +446,6 @@ namespace RestaurantOrders.ViewModels
 
         #region Search Functionality
 
-        // Filter products based on search term
         private void FilterProducts()
         {
             if (string.IsNullOrWhiteSpace(SearchTerm))
@@ -503,10 +477,8 @@ namespace RestaurantOrders.ViewModels
 
         #endregion
 
-        // Public method to refresh the categories and products
         public void RefreshCategoriesAndProducts()
         {
-            // Clear existing event handlers to prevent memory leaks
             if (CategoriesWithProducts != null)
             {
                 foreach (var category in CategoriesWithProducts)
@@ -521,15 +493,12 @@ namespace RestaurantOrders.ViewModels
                 }
             }
 
-            // Clear existing collections
             CategoriesWithProducts.Clear();
             CartItems.Clear();
             CartTotal = 0;
 
-            // Reload all categories and products
             LoadCategoriesAndProducts();
 
-            // Apply current search filter
             FilterProducts();
         }
 
@@ -541,7 +510,6 @@ namespace RestaurantOrders.ViewModels
                 {
                     connection.Open();
 
-                    // Load categories
                     var categories = new List<CategoryViewModel>();
                     using (var command = new SqlCommand("GetAllCategories", connection))
                     {
@@ -559,17 +527,15 @@ namespace RestaurantOrders.ViewModels
                         }
                     }
 
-                    // For each category, load products
                     foreach (var category in categories)
                     {
                         var productsInCategory = new List<ProductItemViewModel>();
 
-                        // Load regular products
                         using (var command = new SqlCommand(
                             @"SELECT p.Id, p.Name, p.Quantity, p.Price, p.CategoryId, c.Name as CategoryName 
-                      FROM Products p 
-                      JOIN Categories c ON p.CategoryId = c.Id 
-                      WHERE p.CategoryId = @CategoryId", connection))
+                              FROM Products p 
+                              JOIN Categories c ON p.CategoryId = c.Id 
+                              WHERE p.CategoryId = @CategoryId", connection))
                         {
                             command.Parameters.AddWithValue("@CategoryId", category.Id);
                             using (var reader = command.ExecuteReader())
@@ -593,18 +559,16 @@ namespace RestaurantOrders.ViewModels
                             }
                         }
 
-                        // If this is the Menu category (usually ID 6 based on your seed data)
                         if (category.Name == "Menu")
                         {
-                            // Load menus as products for display
-                            using (var command = new SqlCommand(@"
-                        SELECT m.Id, m.Name, m.Price, m.CategoryId, c.Name as CategoryName, 
-                               SUM(md.Quantity) as TotalWeight
-                        FROM Menus m
-                        JOIN Categories c ON m.CategoryId = c.Id
-                        JOIN MenuDetails md ON m.Id = md.MenuId
-                        WHERE m.CategoryId = @CategoryId
-                        GROUP BY m.Id, m.Name, m.Price, m.CategoryId, c.Name", connection))
+                            using (var command = new SqlCommand(
+                              @"SELECT m.Id, m.Name, m.Price, m.CategoryId, c.Name as CategoryName, 
+                                       SUM(md.Quantity) as TotalWeight
+                                FROM Menus m
+                                JOIN Categories c ON m.CategoryId = c.Id
+                                JOIN MenuDetails md ON m.Id = md.MenuId
+                                WHERE m.CategoryId = @CategoryId
+                                GROUP BY m.Id, m.Name, m.Price, m.CategoryId, c.Name", connection))
                             {
                                 command.Parameters.AddWithValue("@CategoryId", category.Id);
                                 using (var reader = command.ExecuteReader())
@@ -616,11 +580,10 @@ namespace RestaurantOrders.ViewModels
                                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                             Name = reader.GetString(reader.GetOrdinal("Name")),
                                             Price = reader.GetDecimal(reader.GetOrdinal("Price")),
-                                            // Use the calculated total weight from all menu items
                                             Quantity = reader.GetInt32(reader.GetOrdinal("TotalWeight")),
                                             CategoryId = category.Id,
                                             CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
-                                            IsMenu = true  // Add this flag to indicate it's a menu
+                                            IsMenu = true
                                         };
 
                                         menuProduct.AddedToCart += Product_AddedToCart;
@@ -643,7 +606,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -658,6 +620,3 @@ namespace RestaurantOrders.ViewModels
         #endregion
     }
 }
-
-// TODO: sa fac logica pentru ultimele 6 butoane
-// TODO: sa bag butoane pentru alergeni pentru fiecare produs

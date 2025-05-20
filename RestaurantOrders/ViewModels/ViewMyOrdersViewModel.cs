@@ -32,17 +32,14 @@ namespace RestaurantOrders.ViewModels
         {
             _currentUser = user;
 
-            // Initialize commands
             CommandFilter = new RelayCommand(FilterOrders);
             CommandResetFilter = new RelayCommand(ResetFilter);
             CommandViewDetails = new RelayCommand<OrderViewModel>(ViewOrderDetails);
             CommandCancelOrder = new RelayCommand<OrderViewModel>(CancelOrder);
             CommandClose = new RelayCommand(CloseWindow);
 
-            // Initialize order states for filtering
             InitializeOrderStates();
 
-            // Load orders on startup
             LoadOrders();
         }
 
@@ -202,7 +199,7 @@ namespace RestaurantOrders.ViewModels
             SearchTerm = string.Empty;
             FromDate = null;
             ToDate = null;
-            SelectedOrderState = OrderStates[0]; // All orders option
+            SelectedOrderState = OrderStates[0];
             LoadOrders();
         }
 
@@ -216,11 +213,6 @@ namespace RestaurantOrders.ViewModels
                            $"Estimated Delivery: {order.EstimatedDeliveryTime:dd/MM/yyyy HH:mm}\n" +
                            $"Total: {order.TotalOrderValue:N2} RON",
                            "Order Details", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // In a real implementation, you would open another window to show detailed order information
-            // OrderDetailsWindow detailsWindow = new OrderDetailsWindow(order.OrderId);
-            // detailsWindow.Owner = Application.Current.MainWindow;
-            // detailsWindow.ShowDialog();
         }
 
         private void CancelOrder(OrderViewModel order)
@@ -255,7 +247,6 @@ namespace RestaurantOrders.ViewModels
                         }
                     }
 
-                    // Reload orders to refresh the list
                     LoadOrders();
                 }
                 catch (Exception ex)
@@ -279,10 +270,8 @@ namespace RestaurantOrders.ViewModels
         {
             OrderStates.Clear();
 
-            // Add "All" option
             OrderStates.Add(new OrderStateViewModel { Id = -1, Name = "All" });
 
-            // Add enum values
             foreach (OrderState state in Enum.GetValues(typeof(OrderState)))
             {
                 OrderStates.Add(new OrderStateViewModel
@@ -292,7 +281,6 @@ namespace RestaurantOrders.ViewModels
                 });
             }
 
-            // Set default selected state to "All"
             SelectedOrderState = OrderStates[0];
         }
 
@@ -303,7 +291,6 @@ namespace RestaurantOrders.ViewModels
                 IsLoading = true;
                 Orders.Clear();
 
-                // Check if current user is available
                 if (_currentUser == null || _currentUser.Id <= 0)
                 {
                     IsEmptyState = true;
@@ -319,7 +306,6 @@ namespace RestaurantOrders.ViewModels
                     {
                         command.Connection = connection;
 
-                        // Build the query based on filters
                         var queryBuilder = new System.Text.StringBuilder();
                         queryBuilder.AppendLine(@"
                             SELECT 
@@ -354,7 +340,6 @@ namespace RestaurantOrders.ViewModels
 
                         command.Parameters.AddWithValue("@UserId", _currentUser.Id);
 
-                        // Add filters
                         if (!string.IsNullOrWhiteSpace(SearchTerm))
                         {
                             queryBuilder.AppendLine("AND (o.Id LIKE @SearchTerm)");
@@ -415,7 +400,6 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Check if orders list is empty
                 IsEmptyState = Orders.Count == 0;
                 TotalOrdersCount = Orders.Count;
             }
@@ -431,7 +415,6 @@ namespace RestaurantOrders.ViewModels
 
         private Brush GetStatusColor(OrderState state)
         {
-            // Return different colors based on order status
             switch (state)
             {
                 case OrderState.Registered:
