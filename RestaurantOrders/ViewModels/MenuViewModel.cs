@@ -33,6 +33,8 @@ namespace RestaurantOrders.ViewModels
             CommandDeleteMenu = new RelayCommand(DeleteMenu);
             CommandDeleteCategory = new RelayCommand(DeleteCategory);
             CommandPlaceOrder = new RelayCommand(PlaceOrder, CanPlaceOrder);
+            CommandLoginLogout = new RelayCommand(LoginLogoutButton);
+
 
             CategoriesWithProducts = new ObservableCollection<CategoryWithProducts>();
             FilteredCategoriesWithProducts = CategoriesWithProducts; // Initialize with full list
@@ -46,20 +48,24 @@ namespace RestaurantOrders.ViewModels
             {
                 IsSubmitEnabled = false;
                 IsAdminVisibility = false;
+                LoginLogoutText = "Log in";
             }
             if (userType == UserType.Client)
             {
                 IsAdminVisibility = false;
+                LoginLogoutText = "Log out";
             }
         }
 
         public MenuViewModel(User user, UserType userType) : this(userType)
         {
             CurrentUser = user;
+            LoginLogoutText = "Log out";
         }
 
         private bool _isSubmitEnabled = true;
         private bool _isAdminVisibility = true;
+        private string _loginLogoutText = "";
 
         private ObservableCollection<CategoryWithProducts> _categoriesWithProducts;
         private decimal _cartTotal;
@@ -71,6 +77,15 @@ namespace RestaurantOrders.ViewModels
 
         #region getters-setters
 
+        public string LoginLogoutText
+        {
+            get => _loginLogoutText;
+            set
+            {
+                _loginLogoutText = value;
+                OnPropertyChanged();
+            }
+        }
         public User CurrentUser
         {
             get => _currentUser;
@@ -173,6 +188,7 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandAddCategory { get; set; }
         public ICommand CommandDeleteCategory { get; set; }
         public ICommand CommandPlaceOrder { get; set; }
+        public ICommand CommandLoginLogout { get; set; }
 
         #endregion
 
@@ -231,6 +247,14 @@ namespace RestaurantOrders.ViewModels
         private void DeleteMenu()
         {
 
+        }
+        private void LoginLogoutButton()
+        {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            Window currentWindow = Application.Current.MainWindow;
+            currentWindow.Close();
+            Application.Current.MainWindow = loginWindow;
         }
         private void AddCategory()
         {

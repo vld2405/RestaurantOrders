@@ -1,17 +1,18 @@
-﻿using RestaurantOrders.Models;
+﻿using Microsoft.Data.SqlClient;
+using RestaurantOrders.Models;
 using RestaurantOrders.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows;
-using Microsoft.Data.SqlClient;
+using System.Windows.Input;
 using RestaurantOrders.Infrastructure.Config;
-using System.Collections.ObjectModel;
 
 namespace RestaurantOrders.ViewModels
 {
@@ -302,13 +303,9 @@ namespace RestaurantOrders.ViewModels
         {
             Allergens.Clear();
 
-            using (var command = new SqlCommand(@"
-                SELECT a.Id, a.Name
-                FROM Allergens a
-                JOIN AllergenProduct ap ON a.Id = ap.AllergenId
-                WHERE ap.ProductId = @ProductId
-                ORDER BY a.Name", connection))
+            using (var command = new SqlCommand("GetAllergensByProductId", connection))
             {
+                command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@ProductId", Id);
 
                 using (var reader = command.ExecuteReader())
@@ -334,15 +331,9 @@ namespace RestaurantOrders.ViewModels
             Allergens.Clear();
 
             // Get unique allergens from all products in the menu
-            using (var command = new SqlCommand(@"
-                SELECT DISTINCT a.Id, a.Name
-                FROM Allergens a
-                JOIN AllergenProduct ap ON a.Id = ap.AllergenId
-                JOIN Products p ON ap.ProductId = p.Id
-                JOIN MenuDetails md ON p.Id = md.ProductId
-                WHERE md.MenuId = @MenuId
-                ORDER BY a.Name", connection))
+            using (var command = new SqlCommand("GetAllergensByMenuId", connection))
             {
+                command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@MenuId", Id);
 
                 using (var reader = command.ExecuteReader())

@@ -15,6 +15,45 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <helper:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
 
+        <!-- Logout Button Style - Add this to your Window.Resources section -->
+        <Style x:Key="LogoutButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#572f0e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        CornerRadius="5"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Text -->
+                                <ContentPresenter Grid.Column="1"
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#40230b"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#301b09"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="MenuCategoryStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -336,6 +375,15 @@
                                FontWeight="Bold" 
                                Grid.Column="1"
                                HorizontalAlignment="Center"/>
+
+                    <Button x:Name="LogoutButton"
+                        Style="{StaticResource LogoutButtonStyle}"
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CommandLoginLogout}">
+                        <TextBlock Text="{Binding LoginLogoutText}" 
+                                    VerticalAlignment="Center"/>
+                    </Button>
                 </Grid>
 
                 <!-- Search Bar -->
