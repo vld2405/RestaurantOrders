@@ -518,28 +518,4 @@ namespace RestaurantOrders.ViewModels
 
         #endregion
     }
-
-    public class OrderViewModel
-    {
-        public int OrderId { get; set; }
-        public string OrderState { get; set; }
-        public string CustomerName { get; set; }
-        public string Email { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime EstimatedDeliveryTime { get; set; }
-        public decimal TotalOrderValue { get; set; }
-        public bool CanCancel { get; set; }
-        public Brush StatusColor { get; set; }
-    }
-
-    public class OrderStateViewModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
 }

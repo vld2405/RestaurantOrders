@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RestaurantOrders.Views"
         xmlns:vms="clr-namespace:RestaurantOrders.ViewModels"
         mc:Ignorable="d"
-        Title="Orders Management" Height="600" Width="1000"
+        Title="Orders Management" Height="600" Width="1200"
         Icon="/Images/KETO.png"
         WindowStartupLocation="CenterScreen">
 
@@ -299,7 +299,7 @@
                                     Width="80"
                                     IsReadOnly="True"/>
 
-                <DataGridTemplateColumn Header="Status" Width="120" IsReadOnly="True">
+                <DataGridTemplateColumn Header="Status" Width="100" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource StatusBadgeStyle}"
@@ -314,30 +314,30 @@
 
                 <DataGridTextColumn Header="Customer Name" 
                                     Binding="{Binding CustomerName}"
-                                    Width="160"
+                                    Width="140"
                                     IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Customer Email" 
                                     Binding="{Binding Email}"
-                                    Width="*"
+                                    Width="140"
                                     IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Date Created" 
                                     Binding="{Binding CreatedAt, StringFormat=\{0:dd/MM/yyyy HH:mm\}}"
-                                    Width="130"
+                                    Width="150"
                                     IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Estimated Delivery" 
                                     Binding="{Binding EstimatedDeliveryTime, StringFormat=\{0:dd/MM/yyyy HH:mm\}}"
-                                    Width="130"
+                                    Width="150"
                                     IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Total" 
                                     Binding="{Binding TotalOrderValue, StringFormat=\{0:N2\} RON}"
-                                    Width="100"
+                                    Width="70"
                                     IsReadOnly="True"/>
 
-                <DataGridTemplateColumn Header="Actions" Width="170">
+                <DataGridTemplateColumn Header="Actions" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="5">
