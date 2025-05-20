@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using RestaurantOrders.Infrastructure.Config;
+using System.Windows.Media;
+using RestaurantOrders.Infrastructure.Config.Models;
 
 namespace RestaurantOrders.ViewModels
 {
@@ -23,6 +25,10 @@ namespace RestaurantOrders.ViewModels
         private decimal _price;
         private int _quantity;
         private int _categoryId;
+        private int _stock;
+        private string _stockText;
+        private Brush _stockColor;
+        private int _stockThreshold = int.TryParse(AppConfig.QuantityThreshold?.QuantityThreshold, out int threshold) ? threshold : -1;
         private string _categoryName;
         private bool _isMenu;
         private ObservableCollection<MenuItemViewModel> _menuItems = new ObservableCollection<MenuItemViewModel>();
@@ -85,6 +91,45 @@ namespace RestaurantOrders.ViewModels
                 if (_quantity != value)
                 {
                     _quantity = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public int Stock
+        {
+            get => _stock;
+            set
+            {
+                if (_stock != value)
+                {
+                    _stock = value;
+                    UpdateStockStatus();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string StockText
+        {
+            get => _stockText;
+            private set
+            {
+                if (_stockText != value)
+                {
+                    _stockText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush StockColor
+        {
+            get => _stockColor;
+            private set
+            {
+                if (_stockColor != value)
+                {
+                    _stockColor = value;
                     OnPropertyChanged();
                 }
             }
@@ -177,6 +222,26 @@ namespace RestaurantOrders.ViewModels
 
         #region Private Methods
 
+        private void UpdateStockStatus()
+        {
+            if (_stock > _stockThreshold)
+            {
+                StockText = "In Stock";
+                StockColor = Brushes.Green;
+            }
+            else if (_stock > 0)
+            {
+                StockText = "Almost out of Stock";
+                StockColor = Brushes.Orange;
+            }
+            else
+            {
+                StockText = "Not in Stock";
+                StockColor = Brushes.Red;
+            }
+        }
+
+
         private void LoadProductInfo()
         {
             try
@@ -203,9 +268,10 @@ namespace RestaurantOrders.ViewModels
                 connection.Open();
 
                 using (var command = new SqlCommand(@"
-                    SELECT p.Id, p.Name, p.Price, p.Quantity, p.CategoryId, c.Name AS CategoryName 
+                    SELECT p.Id, p.Name, p.Price, p.Quantity, p.CategoryId, c.Name AS CategoryName , rs.StockQuantity AS Stock
                     FROM Products p
                     JOIN Categories c ON p.CategoryId = c.Id
+                    JOIN RestaurantStocks rs ON p.Id = rs.ProductId
                     WHERE p.Id = @ProductId", connection))
                 {
                     command.Parameters.AddWithValue("@ProductId", Id);
@@ -220,6 +286,7 @@ namespace RestaurantOrders.ViewModels
                             Quantity = reader.GetInt32(reader.GetOrdinal("Quantity"));
                             CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId"));
                             CategoryName = reader.GetString(reader.GetOrdinal("CategoryName"));
+                            Stock = reader.GetInt32(reader.GetOrdinal("Stock"));
                         }
                     }
                 }

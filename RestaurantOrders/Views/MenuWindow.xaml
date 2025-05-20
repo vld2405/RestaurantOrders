@@ -363,9 +363,6 @@
                                 <MenuItem Header="Show Orders" 
                                           Command="{Binding CommandShowOrders}"
                                           Style="{StaticResource DropdownMenuItemStyle}"/>
-                                <MenuItem Header="Stock Stats" 
-                                          Command="{Binding CommandShowStockStats}"
-                                          Style="{StaticResource DropdownMenuItemStyle}"/>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -519,9 +516,8 @@
                         HorizontalAlignment="Right"
                         Command="{Binding CommandViewMyOrders}"
                         Margin="0, 0, 10, 0"
-                        IsEnabled="{Binding IsSubmitEnabled}"
-                        Visibility="{Binding IsClientVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Button.Style>
+                        IsEnabled="{Binding IsSubmitEnabled}">
+                <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="#4CAF50"/>
                             <Setter Property="Foreground" Value="White"/>
@@ -571,33 +567,74 @@
                               Visibility="{Binding CartItems.Count, Converter={StaticResource NumberToVisibilityConverter}, ConverterParameter=0}"/>
 
                         <!-- Cart items -->
+                        <!-- Find and replace the cart items template in MenuWindow.xaml -->
                         <ItemsControl ItemsSource="{Binding CartItems}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="#EEEEEE" 
-                                   BorderThickness="0,0,0,1" 
-                                   Padding="0,8,0,8">
+                    BorderThickness="0,0,0,1" 
+                    Padding="0,8,0,8">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
+                                            <!-- Remove button -->
+                                            <Button Grid.Column="0"
+                            Content="✕"
+                            Width="24"
+                            Height="24"
+                            Margin="0,0,8,0"
+                            Command="{Binding CommandRemoveFromCart}"
+                            IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="#ff6b6b"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Setter Property="BorderThickness" Value="0"/>
+                                                        <Setter Property="Cursor" Value="Hand"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="12"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                                  VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#e05252"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="True">
+                                                                <Setter Property="Background" Value="#c74545"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+
                                             <TextBlock Text="{Binding Name}" 
-                                              Grid.Column="0" 
-                                              VerticalAlignment="Center"/>
+                                Grid.Column="1" 
+                                VerticalAlignment="Center"/>
 
                                             <TextBlock Text="{Binding OrderQuantity, StringFormat=x{0}}" 
-                                              Grid.Column="1" 
-                                              Margin="5,0" 
-                                              VerticalAlignment="Center"/>
+                                Grid.Column="2" 
+                                Margin="5,0" 
+                                VerticalAlignment="Center"/>
 
                                             <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
-                                              Grid.Column="2" 
-                                              HorizontalAlignment="Right" 
-                                              VerticalAlignment="Center" 
-                                              FontWeight="SemiBold"/>
+                                Grid.Column="3" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Center" 
+                                FontWeight="SemiBold"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -620,11 +657,24 @@
                               FontSize="18" 
                               FontWeight="Bold" 
                               Grid.Column="0"/>
-
-                            <TextBlock Text="{Binding CartTotal, StringFormat={}{0:F2} RON}" 
-                              FontSize="18" 
-                              FontWeight="Bold" 
-                              Grid.Column="1"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{Binding CartTotal, StringFormat={}{0:F2} RON}" 
+                                      FontSize="18" 
+                                      FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal"
+                                            Visibility="{Binding ShowDiscount,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="Dicount Applied:" 
+                                      FontSize="14" 
+                                      Foreground="#4CAF50"
+                                      FontWeight="Bold" 
+                                      Grid.Column="1"/>
+                                    <TextBlock Text="{Binding Discount, StringFormat={}{0}%}" 
+                                      FontSize="14" 
+                                      Foreground="#4CAF50"
+                                      FontWeight="Bold" 
+                                      Grid.Column="1"/>
+                                </StackPanel>
+                            </StackPanel>
                         </Grid>
                     </Border>
 

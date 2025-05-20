@@ -68,6 +68,8 @@ namespace RestaurantOrders.ViewModels
         private bool _isSubmitEnabled = true;
         private bool _isAdminVisibility = true;
         private string _loginLogoutText = "";
+        private bool _showDiscount = false;
+        private int _discountPercentage;
 
         private ObservableCollection<CategoryWithProducts> _categoriesWithProducts;
         private decimal _cartTotal;
@@ -85,6 +87,15 @@ namespace RestaurantOrders.ViewModels
             set
             {
                 _loginLogoutText = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool ShowDiscount
+        {
+            get => _showDiscount;
+            set
+            {
+                _showDiscount = value;
                 OnPropertyChanged();
             }
         }
@@ -336,7 +347,20 @@ namespace RestaurantOrders.ViewModels
                 }
             }
 
-            CartTotal = CartItems.Sum(p => p.Price * p.OrderQuantity);
+            if (AppConfig.OrderDiscount?.OrderDiscount != null)
+            {
+                if (int.TryParse(AppConfig.OrderDiscount.OrderDiscount, out int parsedDiscount))
+                {
+                    _discountPercentage = parsedDiscount;
+                }
+            }
+            Console.WriteLine(_discountPercentage);
+            decimal total = CartItems.Sum(p => p.Price * p.OrderQuantity);
+
+            ShowDiscount = total > 100;
+            CartTotal = ShowDiscount 
+                ? Math.Round(total * (1 - (_discountPercentage / 100.0m)), 2)
+                : total;
 
             CommandManager.InvalidateRequerySuggested();
         }
@@ -355,6 +379,108 @@ namespace RestaurantOrders.ViewModels
                     MessageBox.Show("Your cart is empty. Please add items to your order.", "Empty Cart", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
+
+                bool insufficientStock = false;
+                string outOfStockItems = "";
+                bool adjustedQuantities = false;
+
+                using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
+                {
+                    connection.Open();
+
+                    var itemsToRemove = new List<ProductItemViewModel>();
+
+                    foreach (var item in CartItems)
+                    {
+                        if (item.IsMenu)
+                        {
+                            using (var command = new SqlCommand(
+                                @"SELECT p.Id, p.Name, md.Quantity * @OrderQuantity AS RequiredQuantity, rs.StockQuantity 
+                                  FROM MenuDetails md
+                                  JOIN Products p ON md.ProductId = p.Id
+                                  LEFT JOIN RestaurantStocks rs ON p.Id = rs.ProductId
+                                  WHERE md.MenuId = @MenuId", connection))
+                            {
+                                command.Parameters.AddWithValue("@MenuId", item.Id);
+                                command.Parameters.AddWithValue("@OrderQuantity", item.OrderQuantity);
+
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        int requiredQuantity = reader.GetInt32(reader.GetOrdinal("RequiredQuantity"));
+                                        int stockQuantity = reader.IsDBNull(reader.GetOrdinal("StockQuantity")) ? 0 : reader.GetInt32(reader.GetOrdinal("StockQuantity"));
+                                        string productName = reader.GetString(reader.GetOrdinal("Name"));
+
+                                        if (stockQuantity < requiredQuantity)
+                                        {
+                                            if (stockQuantity <= 0)
+                                            {
+                                                insufficientStock = true;
+                                                outOfStockItems += $"- {productName} (in menu {item.Name})\n";
+                                            }
+                                            else
+                                            {
+                                                adjustedQuantities = true;
+                                                int maxPossibleItems = stockQuantity / (requiredQuantity / item.OrderQuantity);
+                                                item.OrderQuantity = maxPossibleItems;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (var command = new SqlCommand(
+                                @"SELECT StockQuantity FROM RestaurantStocks WHERE ProductId = @ProductId", connection))
+                            {
+                                command.Parameters.AddWithValue("@ProductId", item.Id);
+                                object result = command.ExecuteScalar();
+                                int stockQuantity = result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
+
+                                if (stockQuantity < item.OrderQuantity)
+                                {
+                                    if (stockQuantity <= 0)
+                                    {
+                                        insufficientStock = true;
+                                        outOfStockItems += $"- {item.Name}\n";
+                                        itemsToRemove.Add(item);
+                                    }
+                                    else
+                                    {
+                                        adjustedQuantities = true;
+                                        item.OrderQuantity = stockQuantity;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Remove out-of-stock items after iteration
+                    foreach (var item in itemsToRemove)
+                    {
+                        CartItems.Remove(item);
+                    }
+
+                }
+
+                if (insufficientStock)
+                {
+                    MessageBox.Show($"The following items are out of stock:\n{outOfStockItems}\nThey have been removed from your cart.",
+                        "Out of Stock", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    UpdateCart();
+                    return;
+                }
+
+                if (adjustedQuantities)
+                {
+                    MessageBox.Show("Some item quantities were adjusted due to limited stock.\nPlease review your cart before placing the order.",
+                        "Stock Adjustment", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    UpdateCart();
+                    return;
+                }
+
 
                 List<int> productIds = new List<int>();
                 List<int> menuIds = new List<int>();
@@ -414,8 +540,10 @@ namespace RestaurantOrders.ViewModels
                                 if (orderId > 0)
                                 {
                                     DateTime estimatedDelivery = reader.GetDateTime(reader.GetOrdinal("EstimatedDeliveryTime"));
-
                                     string deliveryTimeStr = estimatedDelivery.ToString("hh:mm tt");
+
+                                    // Update stock after successful order placement
+                                    UpdateStockQuantities(productIds, menuIds, quantities);
 
                                     MessageBox.Show($"Your order #{orderId} has been placed successfully!\n\nEstimated delivery time: {deliveryTimeStr}",
                                         "Order Placed", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -439,6 +567,63 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
+                MessageBox.Show($"An error occurred while placing your order: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void UpdateStockQuantities(List<int> productIds, List<int> menuIds, List<int> quantities)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(AppConfig.ConnectionStrings?.RestaurantOrdersDatabase))
+                {
+                    connection.Open();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            for (int i = 0; i < productIds.Count; i++)
+                            {
+                                using (var command = new SqlCommand(
+                                    @"UPDATE RestaurantStocks 
+                                      SET StockQuantity = StockQuantity - @Quantity 
+                                      WHERE ProductId = @ProductId", connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ProductId", productIds[i]);
+                                    command.Parameters.AddWithValue("@Quantity", quantities[i]);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            for (int i = 0; i < menuIds.Count; i++)
+                            {
+                                using (var command = new SqlCommand(
+                                    @"UPDATE rs
+                                      SET rs.StockQuantity = rs.StockQuantity - (md.Quantity * @OrderQuantity)
+                                      FROM RestaurantStocks rs
+                                      JOIN MenuDetails md ON rs.ProductId = md.ProductId
+                                      WHERE md.MenuId = @MenuId", connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@MenuId", menuIds[i]);
+                                    command.Parameters.AddWithValue("@OrderQuantity", quantities[i]);
+                                    command.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw new Exception($"Failed to update stock: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating stock: {ex.Message}", "Stock Update Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

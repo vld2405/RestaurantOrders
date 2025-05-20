@@ -94,7 +94,7 @@ namespace RestaurantOrders.ViewModels
             get => _orderQuantity;
             set
             {
-                _orderQuantity = value;
+                _orderQuantity = Math.Max(0, value);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsInCart));
             }
@@ -105,7 +105,7 @@ namespace RestaurantOrders.ViewModels
             get => _tempQuantity;
             set
             {
-                _tempQuantity = value;
+                _tempQuantity = Math.Max(0, value);
                 OnPropertyChanged();
             }
         }
@@ -118,6 +118,7 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandDecreaseQuantity { get; set; }
         public ICommand CommandAddToCart { get; set; }
         public ICommand CommandInfoButton { get; set; }
+        public ICommand CommandRemoveFromCart { get; set; }
 
         public ProductItemViewModel()
         {
@@ -125,6 +126,7 @@ namespace RestaurantOrders.ViewModels
             CommandDecreaseQuantity = new RelayCommand(DecreaseQuantity, CanDecreaseQuantity);
             CommandAddToCart = new RelayCommand(AddToCart, CanAddToCart);
             CommandInfoButton = new RelayCommand(OpenInfo);
+            CommandRemoveFromCart = new RelayCommand(RemoveFromCart);
         }
 
         private void IncreaseQuantity()
@@ -145,8 +147,15 @@ namespace RestaurantOrders.ViewModels
             if (TempQuantity > 0)
             {
                 OrderQuantity += TempQuantity;
+                TempQuantity = 0;
                 AddedToCart?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        private void RemoveFromCart()
+        {
+            OrderQuantity = 0;
+            AddedToCart?.Invoke(this, EventArgs.Empty);
         }
 
         private void OpenInfo()

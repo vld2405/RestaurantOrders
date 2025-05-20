@@ -123,6 +123,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Category -->
@@ -150,6 +151,16 @@
                         <TextBlock Text="{Binding Quantity, StringFormat={}{0}g}" 
                                    Style="{StaticResource PropertyValueStyle}"
                                    Grid.Row="2" Grid.Column="1"/>
+                        
+                        <!-- Stock -->
+                        <TextBlock Text="Stock:" 
+                                   Style="{StaticResource PropertyLabelStyle}"
+                                   Grid.Row="3" Grid.Column="0"/>
+                        <TextBlock Text="{Binding StockText}" 
+                                   Foreground="{Binding StockColor}"
+                                   Style="{StaticResource PropertyValueStyle}"
+                                   FontWeight="Bold"
+                                   Grid.Row="3" Grid.Column="1"/>   
                     </Grid>
 
                     <!-- Menu Items (if this is a menu) -->

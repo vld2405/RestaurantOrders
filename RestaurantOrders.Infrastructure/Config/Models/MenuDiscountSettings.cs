@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace RestaurantOrders.Infrastructure.Config.Models
 {
-    public class DiscountsSettings
+    public class MenuDiscountSettings
     {
         public string MenuDiscount { get; set; }
-        public string LargeOrderDiscount { get; set; }
     }
 }

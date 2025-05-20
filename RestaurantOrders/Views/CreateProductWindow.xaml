@@ -150,7 +150,7 @@
                     <TextBox x:Name="QuantityTextBox" 
                              Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource NumericTextBoxStyle}"/>
-                    <TextBlock Text="Restaurant Stock (grams):" 
+                    <TextBlock Text="Restaurant Stock (units):" 
                              Style="{StaticResource LabelTextStyle}"/>
                     <TextBox x:Name="RestaurantStockTextBox" 
                              Text="{Binding RestaurantStock, UpdateSourceTrigger=PropertyChanged}"

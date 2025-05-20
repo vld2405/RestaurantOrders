@@ -144,9 +144,9 @@ namespace RestaurantOrders.ViewModels
         #endregion
 
         #region Events
-        // Event that signals a product was successfully created
+        
         public event EventHandler ProductCreated;
-        // Event that signals the window should close
+        
         public event EventHandler RequestClose;
         #endregion
 
@@ -155,7 +155,6 @@ namespace RestaurantOrders.ViewModels
         {
             try
             {
-                // Basic validation
                 if (string.IsNullOrWhiteSpace(Name))
                 {
                     MessageBox.Show("Please enter a product name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -173,6 +172,11 @@ namespace RestaurantOrders.ViewModels
                     MessageBox.Show("Quantity must be greater than zero.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
+                if (RestaurantStock <= 0)
+                {
+                    MessageBox.Show("Restaurant stock must be greater than zero.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
                 var selectedCategory = Categories.FirstOrDefault(c => c.Id == SelectedCategory?.Id);
                 if (selectedCategory == null)
@@ -181,7 +185,6 @@ namespace RestaurantOrders.ViewModels
                     return;
                 }
 
-                // Get selected allergens
                 var selectedAllergens = AvailableAllergens.Where(a => a.IsSelected).ToList();
                 string allergenIds = string.Join(",", selectedAllergens.Select(a => a.Id));
 
@@ -193,13 +196,12 @@ namespace RestaurantOrders.ViewModels
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Add parameters
                         command.Parameters.AddWithValue("@Name", Name);
                         command.Parameters.AddWithValue("@Quantity", Quantity);
                         command.Parameters.AddWithValue("@CategoryId", selectedCategory.Id);
                         command.Parameters.AddWithValue("@Price", Price);
+                        command.Parameters.AddWithValue("@RestaurantStockQuantity", RestaurantStock);
 
-                        // Add allergens parameter (null if no allergens selected)
                         if (!string.IsNullOrEmpty(allergenIds))
                         {
                             command.Parameters.AddWithValue("@AllergenIds", allergenIds);
@@ -220,7 +222,6 @@ namespace RestaurantOrders.ViewModels
                                 {
                                     MessageBox.Show("Product added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Raise the ProductCreated event to signal success
                                     ProductCreated?.Invoke(this, EventArgs.Empty);
 
                                     ClearForm();
@@ -237,7 +238,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                //MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -246,9 +246,9 @@ namespace RestaurantOrders.ViewModels
             Name = string.Empty;
             Price = 0;
             Quantity = 1;
+            RestaurantStock = 1;
             SelectedCategory = null;
 
-            // Reset allergen selections
             foreach (var allergen in AvailableAllergens)
             {
                 allergen.IsSelected = false;
@@ -304,8 +304,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                //if (!_isClosing)
-                    //MessageBox.Show($"Failed to load categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -343,8 +341,6 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                //if (!_isClosing)
-                    //MessageBox.Show($"Failed to load allergens: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

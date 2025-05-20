@@ -32,9 +32,8 @@ namespace RestaurantOrders.ViewModels
 
         private decimal _totalProductsPrice = 0.0m;
         private decimal _calculatedPrice = 0.0m;
-        private int _discountPercentage = 10; // Default discount percentage
+        private int _discountPercentage = 10;
 
-        // Command properties
         public ICommand CommandSubmit { get; private set; }
         public ICommand CommandCancel { get; private set; }
         public ICommand CommandAddProduct { get; private set; }
@@ -53,11 +52,12 @@ namespace RestaurantOrders.ViewModels
             LoadProducts();
 
 
-            if (AppConfig.Discounts?.MenuDiscount != null)
+            if (AppConfig.MenuDiscount?.MenuDiscount != null)
             {
-                if (int.TryParse(AppConfig.Discounts.MenuDiscount, out int discount))
+                if (int.TryParse(AppConfig.MenuDiscount.MenuDiscount, out int discount))
                 {
                     _discountPercentage = discount;
+                    Console.WriteLine(_discountPercentage);
                 }
             }
         }
@@ -366,7 +366,6 @@ namespace RestaurantOrders.ViewModels
 
         private void CalculateMenuPrice()
         {
-            // Apply discount to the total price
             CalculatedPrice = Math.Round(TotalProductsPrice * (1 - (DiscountPercentage / 100.0m)), 2);
         }
 

@@ -49,6 +49,13 @@ namespace RestaurantOrders.Database.Context
                 .HasForeignKey(m => m.CategoryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<RestaurantStock>()
+                .HasOne(rs => rs.Product)
+                .WithOne()
+                .HasForeignKey<RestaurantStock>(rs => rs.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             Seed(modelBuilder);
         }
 
@@ -193,6 +200,25 @@ namespace RestaurantOrders.Database.Context
                     CategoryId = 5,
                     Price = 25.99M
                 }
+
+            );
+
+            modelBuilder.Entity<RestaurantStock>().HasData(
+                new RestaurantStock { Id = 1, ProductId = 1, StockQuantity = 10 },
+                new RestaurantStock { Id = 2, ProductId = 2, StockQuantity = 10 },
+                new RestaurantStock { Id = 3, ProductId = 3, StockQuantity = 10 },
+                new RestaurantStock { Id = 4, ProductId = 4, StockQuantity = 10 },
+                new RestaurantStock { Id = 5, ProductId = 5, StockQuantity = 10 },
+                new RestaurantStock { Id = 6, ProductId = 6, StockQuantity = 10 },
+                new RestaurantStock { Id = 7, ProductId = 7, StockQuantity = 10 },
+                new RestaurantStock { Id = 8, ProductId = 8, StockQuantity = 10 },
+                new RestaurantStock { Id = 9, ProductId = 9, StockQuantity = 10 },
+                new RestaurantStock { Id = 10, ProductId = 10, StockQuantity = 10 },
+                new RestaurantStock { Id = 11, ProductId = 11, StockQuantity = 10 },
+                new RestaurantStock { Id = 12, ProductId = 12, StockQuantity = 10 },
+                new RestaurantStock { Id = 13, ProductId = 13, StockQuantity = 10 },
+                new RestaurantStock { Id = 14, ProductId = 14, StockQuantity = 10 },
+                new RestaurantStock { Id = 15, ProductId = 15, StockQuantity = 10 }
             );
         }
     }

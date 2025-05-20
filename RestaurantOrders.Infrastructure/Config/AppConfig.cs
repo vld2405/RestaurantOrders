@@ -11,7 +11,8 @@ namespace RestaurantOrders.Infrastructure.Config
     public class AppConfig
     {
         public static ConnectionStringsSettings? ConnectionStrings { get; set; }
-        public static DiscountsSettings? Discounts { get; set; }
+        public static MenuDiscountSettings? MenuDiscount { get; set; }
+        public static OrderDiscountSettings? OrderDiscount { get; set; }
         public static QuantityThresholdSettings? QuantityThreshold{ get; set; }
 
         public static void Init(IConfiguration configuration)
@@ -22,7 +23,8 @@ namespace RestaurantOrders.Infrastructure.Config
         private static void Configure(IConfiguration configuration)
         {
             ConnectionStrings = configuration.GetSection("ConnectionStrings").Get<ConnectionStringsSettings>();
-            Discounts = configuration.GetSection("Discounts").Get<DiscountsSettings>();
+            MenuDiscount = configuration.GetSection("MenuDiscounts").Get<MenuDiscountSettings>();
+            OrderDiscount = configuration.GetSection("OrderDiscounts").Get<OrderDiscountSettings>();
             QuantityThreshold = configuration.GetSection("Restaurant").Get<QuantityThresholdSettings>();
         }
     }

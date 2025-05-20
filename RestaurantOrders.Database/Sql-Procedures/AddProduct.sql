@@ -1,8 +1,9 @@
-CREATE PROCEDURE [dbo].[AddProduct]
+CREATE OR ALTER PROCEDURE [dbo].[AddProduct]
     @Name NVARCHAR(100),
     @Quantity INT,
     @CategoryId INT,
     @Price DECIMAL(6, 2),
+    @RestaurantStockQuantity INT,
     @AllergenIds NVARCHAR(MAX) = NULL  -- Comma-separated allergen IDs
 AS
 BEGIN
@@ -42,6 +43,16 @@ BEGIN
         );
         
         DECLARE @ProductId INT = SCOPE_IDENTITY();
+        
+        -- Insert restaurant stock
+        INSERT INTO [dbo].[RestaurantStocks] (
+            ProductId,
+            StockQuantity
+        )
+        VALUES (
+            @ProductId,
+            @RestaurantStockQuantity
+        );
         
         -- Process allergens if provided
         IF @AllergenIds IS NOT NULL AND LEN(@AllergenIds) > 0
