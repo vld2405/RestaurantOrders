@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantOrders.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,19 @@ using System.Windows.Shapes;
 
 namespace RestaurantOrders.Views
 {
-    /// <summary>
-    /// Interaction logic for ProductInfoWindow.xaml
-    /// </summary>
     public partial class ProductInfoWindow : Window
     {
-        public ProductInfoWindow()
+        private ProductInfoViewModel _viewModel;
+
+        public ProductInfoWindow(int productId, bool isMenu)
         {
             InitializeComponent();
+
+            _viewModel = new ProductInfoViewModel(productId, isMenu);
+            DataContext = _viewModel;
+
+            // Subscribe to close event
+            _viewModel.RequestClose += (sender, e) => this.Close();
         }
     }
 }

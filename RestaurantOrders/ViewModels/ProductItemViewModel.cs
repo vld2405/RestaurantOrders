@@ -15,6 +15,7 @@ namespace RestaurantOrders.ViewModels
         private decimal _price;
         private int _quantity;
         private int _categoryId;
+        private string _categoryName;
         private int _orderQuantity = 0;
         private int _tempQuantity = 0; // Temporary quantity for display before adding to cart
         private bool _isMenu;
@@ -78,6 +79,16 @@ namespace RestaurantOrders.ViewModels
             }
         }
 
+        public string CategoryName
+        {
+            get => _categoryName;
+            set
+            {
+                _categoryName = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int OrderQuantity
         {
             get => _orderQuantity;
@@ -109,6 +120,7 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandDecreaseQuantity { get; set; }
         public ICommand CommandAddToCart { get; set; }
         public ICommand CommandInfoButton { get; set; }
+
         public ProductItemViewModel()
         {
             CommandIncreaseQuantity = new RelayCommand(IncreaseQuantity);
@@ -138,12 +150,21 @@ namespace RestaurantOrders.ViewModels
                 AddedToCart?.Invoke(this, EventArgs.Empty);
             }
         }
+
         private void OpenInfo()
         {
-            ProductInfoWindow productInfoWindow = new ProductInfoWindow();
-            productInfoWindow.Owner = Application.Current.MainWindow;
-            productInfoWindow.ShowDialog();
+            try
+            {
+                ProductInfoWindow productInfoWindow = new ProductInfoWindow(Id, IsMenu);
+                productInfoWindow.Owner = Application.Current.MainWindow;
+                productInfoWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening product info: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         private bool CanAddToCart() => Quantity > 0;
 
         public event PropertyChangedEventHandler PropertyChanged;

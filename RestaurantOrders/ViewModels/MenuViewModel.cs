@@ -477,7 +477,11 @@ namespace RestaurantOrders.ViewModels
                         var productsInCategory = new List<ProductItemViewModel>();
 
                         // Load regular products
-                        using (var command = new SqlCommand("SELECT Id, Name, Quantity, Price FROM Products WHERE CategoryId = @CategoryId", connection))
+                        using (var command = new SqlCommand(
+                            @"SELECT p.Id, p.Name, p.Quantity, p.Price, p.CategoryId, c.Name as CategoryName 
+                      FROM Products p 
+                      JOIN Categories c ON p.CategoryId = c.Id 
+                      WHERE p.CategoryId = @CategoryId", connection))
                         {
                             command.Parameters.AddWithValue("@CategoryId", category.Id);
                             using (var reader = command.ExecuteReader())
@@ -491,6 +495,7 @@ namespace RestaurantOrders.ViewModels
                                         Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                                         Price = reader.GetDecimal(reader.GetOrdinal("Price")),
                                         CategoryId = category.Id,
+                                        CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
                                         IsMenu = false
                                     };
 
@@ -505,12 +510,13 @@ namespace RestaurantOrders.ViewModels
                         {
                             // Load menus as products for display
                             using (var command = new SqlCommand(@"
-                        SELECT m.Id, m.Name, m.Price, m.CategoryId, 
+                        SELECT m.Id, m.Name, m.Price, m.CategoryId, c.Name as CategoryName, 
                                SUM(md.Quantity) as TotalWeight
                         FROM Menus m
+                        JOIN Categories c ON m.CategoryId = c.Id
                         JOIN MenuDetails md ON m.Id = md.MenuId
                         WHERE m.CategoryId = @CategoryId
-                        GROUP BY m.Id, m.Name, m.Price, m.CategoryId", connection))
+                        GROUP BY m.Id, m.Name, m.Price, m.CategoryId, c.Name", connection))
                             {
                                 command.Parameters.AddWithValue("@CategoryId", category.Id);
                                 using (var reader = command.ExecuteReader())
@@ -525,6 +531,7 @@ namespace RestaurantOrders.ViewModels
                                             // Use the calculated total weight from all menu items
                                             Quantity = reader.GetInt32(reader.GetOrdinal("TotalWeight")),
                                             CategoryId = category.Id,
+                                            CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
                                             IsMenu = true  // Add this flag to indicate it's a menu
                                         };
 
@@ -548,7 +555,7 @@ namespace RestaurantOrders.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
