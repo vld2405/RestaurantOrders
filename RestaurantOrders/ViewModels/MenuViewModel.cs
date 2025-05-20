@@ -270,7 +270,19 @@ namespace RestaurantOrders.ViewModels
         }
         private void DeleteCategory()
         {
+            DeleteCategoryWindow deleteCategoryWindow = new DeleteCategoryWindow();
+            deleteCategoryWindow.Owner = Application.Current.MainWindow;
 
+            // Subscribe to the CategoryDeleted event to refresh the menu when a category is deleted
+            deleteCategoryWindow.CategoryDeleted += DeleteCategoryWindow_CategoryDeleted;
+
+            deleteCategoryWindow.ShowDialog();
+        }
+
+        private void DeleteCategoryWindow_CategoryDeleted(object sender, EventArgs e)
+        {
+            // Refresh the menu when a category is deleted
+            RefreshCategoriesAndProducts();
         }
         private void DeleteMenu()
         {
