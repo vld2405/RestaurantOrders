@@ -35,6 +35,7 @@ namespace RestaurantOrders.ViewModels
             CommandPlaceOrder = new RelayCommand(PlaceOrder, CanPlaceOrder);
             CommandLoginLogout = new RelayCommand(LoginLogoutButton);
             CommandShowOrders = new RelayCommand(ShowOrders);
+            CommandViewMyOrders = new RelayCommand(ViewOrders);
 
 
             CategoriesWithProducts = new ObservableCollection<CategoryWithProducts>();
@@ -191,6 +192,7 @@ namespace RestaurantOrders.ViewModels
         public ICommand CommandPlaceOrder { get; set; }
         public ICommand CommandLoginLogout { get; set; }
         public ICommand CommandShowOrders { get; set; }
+        public ICommand CommandViewMyOrders { get; set; }
 
         #endregion
 
@@ -249,6 +251,12 @@ namespace RestaurantOrders.ViewModels
         private void DeleteMenu()
         {
 
+        }
+        private void ViewOrders()
+        {
+            ViewMyOrdersWindow viewMyOrdersWindow = new ViewMyOrdersWindow(CurrentUser);
+            viewMyOrdersWindow.Owner = Application.Current.MainWindow;
+            viewMyOrdersWindow.ShowDialog();
         }
         private void ShowOrders()
         {
