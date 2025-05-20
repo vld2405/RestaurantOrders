@@ -254,7 +254,19 @@ namespace RestaurantOrders.ViewModels
         }
         private void DeleteAllergen()
         {
+            DeleteAllergenWindow deleteAllergenWindow = new DeleteAllergenWindow();
+            deleteAllergenWindow.Owner = Application.Current.MainWindow;
 
+            // Subscribe to the AllergenDeleted event to refresh the menu if needed
+            deleteAllergenWindow.AllergenDeleted += DeleteAllergenWindow_AllergenDeleted;
+
+            deleteAllergenWindow.ShowDialog();
+        }
+
+        private void DeleteAllergenWindow_AllergenDeleted(object sender, EventArgs e)
+        {
+            // In case an allergen that's used in any loaded product is deleted, refresh the menu
+            RefreshCategoriesAndProducts();
         }
         private void DeleteCategory()
         {
