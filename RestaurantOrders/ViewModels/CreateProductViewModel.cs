@@ -30,6 +30,7 @@ namespace RestaurantOrders.ViewModels
         private CategoryViewModel _selectedCategory;
         private decimal _price;
         private int _quantity = 1;
+        private int _restaurantStock = 1;
         private ObservableCollection<CategoryViewModel> _categories = new ObservableCollection<CategoryViewModel>();
         private ObservableCollection<AllergenViewModel> _availableAllergens = new ObservableCollection<AllergenViewModel>();
 
@@ -94,6 +95,18 @@ namespace RestaurantOrders.ViewModels
                 {
                     _quantity = value;
                     OnPropertyChanged(nameof(Quantity));
+                }
+            }
+        }
+        public int RestaurantStock
+        {
+            get => _restaurantStock;
+            set
+            {
+                if (_restaurantStock != value)
+                {
+                    _restaurantStock = value;
+                    OnPropertyChanged(nameof(RestaurantStock));
                 }
             }
         }
