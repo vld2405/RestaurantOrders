@@ -457,7 +457,6 @@ namespace RestaurantOrders.ViewModels
                         }
                     }
 
-                    // Remove out-of-stock items after iteration
                     foreach (var item in itemsToRemove)
                     {
                         CartItems.Remove(item);
@@ -542,7 +541,6 @@ namespace RestaurantOrders.ViewModels
                                     DateTime estimatedDelivery = reader.GetDateTime(reader.GetOrdinal("EstimatedDeliveryTime"));
                                     string deliveryTimeStr = estimatedDelivery.ToString("hh:mm tt");
 
-                                    // Update stock after successful order placement
                                     UpdateStockQuantities(productIds, menuIds, quantities);
 
                                     MessageBox.Show($"Your order #{orderId} has been placed successfully!\n\nEstimated delivery time: {deliveryTimeStr}",

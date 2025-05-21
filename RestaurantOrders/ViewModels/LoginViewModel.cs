@@ -61,23 +61,16 @@ namespace RestaurantOrders.ViewModels
         {
             try
             {
-                // Check for empty fields
                 if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
                 {
                     MessageBox.Show("Please enter both email and password.", "Login Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // For direct binding from PasswordBox
-                // In LoginWindow.xaml.cs add: viewModel.Password = PasswordBox.Password;
-
                 User? user = VerifyUserCredentials(Email, Password);
 
                 if (user != null)
                 {
-                    // User successfully authenticated
-                    // Store user info in global state if needed
-                    // For example: CurrentUser.SetUser(user.Id, user.Email, user.UserType, user.FirstName, user.LastName);
 
                     MenuWindow menuWindow = new MenuWindow(user, user.UserType);
                     menuWindow.Show();

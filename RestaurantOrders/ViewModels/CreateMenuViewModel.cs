@@ -167,7 +167,6 @@ namespace RestaurantOrders.ViewModels
                 {
                     _totalProductsPrice = value;
                     OnPropertyChanged();
-                    // Recalculate final price when total changes
                     CalculateMenuPrice();
                 }
             }
@@ -195,7 +194,6 @@ namespace RestaurantOrders.ViewModels
                 {
                     _discountPercentage = value;
                     OnPropertyChanged();
-                    // Recalculate price when discount changes
                     CalculateMenuPrice();
                 }
             }
@@ -218,7 +216,6 @@ namespace RestaurantOrders.ViewModels
         {
             try
             {
-                // Basic validation
                 if (string.IsNullOrWhiteSpace(Name))
                 {
                     MessageBox.Show("Please enter a menu name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -237,7 +234,6 @@ namespace RestaurantOrders.ViewModels
                     return;
                 }
 
-                // Prepare data for SQL procedure
                 var productIds = string.Join(",", MenuProducts.Select(p => p.Product.Id));
                 var productQuantities = string.Join(",", MenuProducts.Select(p => p.Quantity));
 
@@ -249,12 +245,11 @@ namespace RestaurantOrders.ViewModels
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
-                        // Add parameters
                         command.Parameters.AddWithValue("@Name", Name);
                         command.Parameters.AddWithValue("@CategoryId", SelectedCategory.Id);
                         command.Parameters.AddWithValue("@ProductIds", productIds);
                         command.Parameters.AddWithValue("@ProductQuantities", productQuantities);
-                        command.Parameters.AddWithValue("@Price", DBNull.Value); // Let the procedure calculate the price
+                        command.Parameters.AddWithValue("@Price", DBNull.Value);
 
                         using (var reader = command.ExecuteReader())
                         {
@@ -273,10 +268,10 @@ namespace RestaurantOrders.ViewModels
 
                                     MessageBox.Show($"Menu '{Name}' created successfully with price {calculatedPrice:F2} RON.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                                    // Raise the MenuCreated event to signal success
+                                    
                                     MenuCreated?.Invoke(this, EventArgs.Empty);
 
-                                    // Close the window
+                                    
                                     OnRequestClose();
                                 }
                                 else
@@ -309,19 +304,19 @@ namespace RestaurantOrders.ViewModels
             if (SelectedProduct == null || ProductQuantity <= 0)
                 return;
 
-            // Check if the product is already in the menu
+            
             var existingProduct = MenuProducts.FirstOrDefault(p => p.Product.Id == SelectedProduct.Id);
             if (existingProduct != null)
             {
-                // Update quantity if already exists
+                
                 existingProduct.Quantity += ProductQuantity;
-                // Refresh UI binding
+                
                 MenuProducts.Remove(existingProduct);
                 MenuProducts.Add(existingProduct);
             }
             else
             {
-                // Add new product to menu
+                
                 var menuProduct = new MenuProductViewModel
                 {
                     Product = SelectedProduct,
@@ -330,14 +325,13 @@ namespace RestaurantOrders.ViewModels
                 MenuProducts.Add(menuProduct);
             }
 
-            // Reset selection for next product
+            
             ProductQuantity = 1;
             SelectedProduct = null;
 
-            // Recalculate total price
+            
             CalculateTotalPrice();
 
-            // Update commands state
             CommandManager.InvalidateRequerySuggested();
         }
 
@@ -347,10 +341,8 @@ namespace RestaurantOrders.ViewModels
             {
                 MenuProducts.Remove(product);
 
-                // Recalculate total price
                 CalculateTotalPrice();
 
-                // Update commands state
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -401,7 +393,7 @@ namespace RestaurantOrders.ViewModels
                     }
                 }
 
-                // Pre-select the Menu category if available
+                
                 var menuCategory = Categories.FirstOrDefault(c => c.Name == "Menu");
                 if (menuCategory != null)
                 {
@@ -427,7 +419,6 @@ namespace RestaurantOrders.ViewModels
                 {
                     connection.Open();
 
-                    // Get all products except those in the Menu category
                     using (var command = new SqlCommand(@"
                         SELECT p.Id, p.Name, p.Price, p.Quantity, p.CategoryId, c.Name as CategoryName 
                         FROM Products p
@@ -466,10 +457,8 @@ namespace RestaurantOrders.ViewModels
 
         #region Events and Cleanup
 
-        // Event that signals a menu was successfully created
         public event EventHandler MenuCreated;
 
-        // Event that signals the window should close
         public event EventHandler RequestClose;
 
         protected virtual void OnRequestClose()
