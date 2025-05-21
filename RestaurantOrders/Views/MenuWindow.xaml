@@ -567,13 +567,12 @@
                               Visibility="{Binding CartItems.Count, Converter={StaticResource NumberToVisibilityConverter}, ConverterParameter=0}"/>
 
                         <!-- Cart items -->
-                        <!-- Find and replace the cart items template in MenuWindow.xaml -->
                         <ItemsControl ItemsSource="{Binding CartItems}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="#EEEEEE" 
-                    BorderThickness="0,0,0,1" 
-                    Padding="0,8,0,8">
+                                        BorderThickness="0,0,0,1" 
+                                        Padding="0,8,0,8">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
@@ -584,12 +583,12 @@
 
                                             <!-- Remove button -->
                                             <Button Grid.Column="0"
-                            Content="✕"
-                            Width="24"
-                            Height="24"
-                            Margin="0,0,8,0"
-                            Command="{Binding CommandRemoveFromCart}"
-                            IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}">
+                                                Content="✕"
+                                                Width="24"
+                                                Height="24"
+                                                Margin="0,0,8,0"
+                                                Command="{Binding CommandRemoveFromCart}"
+                                                IsEnabled="{Binding DataContext.IsSubmitEnabled, RelativeSource={RelativeSource AncestorType=Window}}">
                                                 <Button.Style>
                                                     <Style TargetType="Button">
                                                         <Setter Property="Background" Value="#ff6b6b"/>
@@ -600,11 +599,11 @@
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="Button">
                                                                     <Border Background="{TemplateBinding Background}"
-                                                    CornerRadius="12"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                                                        CornerRadius="12"
+                                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                                        BorderBrush="{TemplateBinding BorderBrush}">
                                                                         <ContentPresenter HorizontalAlignment="Center" 
-                                                                  VerticalAlignment="Center"/>
+                                                                            VerticalAlignment="Center"/>
                                                                     </Border>
                                                                 </ControlTemplate>
                                                             </Setter.Value>
@@ -622,19 +621,19 @@
                                             </Button>
 
                                             <TextBlock Text="{Binding Name}" 
-                                Grid.Column="1" 
-                                VerticalAlignment="Center"/>
+                                                Grid.Column="1" 
+                                                VerticalAlignment="Center"/>
 
                                             <TextBlock Text="{Binding OrderQuantity, StringFormat=x{0}}" 
-                                Grid.Column="2" 
-                                Margin="5,0" 
-                                VerticalAlignment="Center"/>
+                                                Grid.Column="2" 
+                                                Margin="5,0" 
+                                                VerticalAlignment="Center"/>
 
                                             <TextBlock Text="{Binding Price, StringFormat={}{0:F2} RON}" 
-                                Grid.Column="3" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                FontWeight="SemiBold"/>
+                                                Grid.Column="3" 
+                                                HorizontalAlignment="Right" 
+                                                VerticalAlignment="Center" 
+                                                FontWeight="SemiBold"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -645,8 +644,8 @@
 
                 <StackPanel Grid.Row="2">
                     <Border BorderBrush="#DDDDDD" 
-                   BorderThickness="0,1,0,0" 
-                   Padding="0,15,0,15">
+                           BorderThickness="0,1,0,0" 
+                           Padding="0,15,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -654,9 +653,9 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="Total:" 
-                              FontSize="18" 
-                              FontWeight="Bold" 
-                              Grid.Column="0"/>
+                                  FontSize="18" 
+                                  FontWeight="Bold" 
+                                  Grid.Column="0"/>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="{Binding CartTotal, StringFormat={}{0:F2} RON}" 
                                       FontSize="18" 
@@ -664,15 +663,15 @@
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding ShowDiscount,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <TextBlock Text="Dicount Applied:" 
-                                      FontSize="14" 
-                                      Foreground="#4CAF50"
-                                      FontWeight="Bold" 
-                                      Grid.Column="1"/>
+                                          FontSize="14" 
+                                          Foreground="#4CAF50"
+                                          FontWeight="Bold" 
+                                          Grid.Column="1"/>
                                     <TextBlock Text="{Binding Discount, StringFormat={}{0}%}" 
-                                      FontSize="14" 
-                                      Foreground="#4CAF50"
-                                      FontWeight="Bold" 
-                                      Grid.Column="1"/>
+                                          FontSize="14" 
+                                          Foreground="#4CAF50"
+                                          FontWeight="Bold" 
+                                          Grid.Column="1"/>
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
